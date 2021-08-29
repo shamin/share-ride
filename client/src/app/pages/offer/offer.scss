@@ -1,7 +1,12 @@
-.map__view {
+.offer_map__view {
   display: flex;
   width: 100%;
   box-sizing: border-box;
+  .input {
+    font-family: Poppins, sans-serif;
+    color: #000;
+    font-weight: 500;
+  }
   .ride__selection {
     min-width: 20%;
     box-sizing: border-box;

@@ -1,13 +1,11 @@
-import "./ride.scss";
+import "./offer.scss";
 import { useState } from "react";
 import ReactMapGL, { Marker } from "react-map-gl";
-import { Select, Button, MapMarkerIcon } from "evergreen-ui";
+import { Select, Button, MapMarkerIcon, TextInput } from "evergreen-ui";
 //@ts-expect-error
 import AlgoliaPlaces from "algolia-places-react";
-import * as turf from "@turf/turf";
 import { PolylineOverlay } from "./PloyLineOverlay";
 import { useEffect } from "react";
-import { RidersModal } from "./Riders";
 
 const COST_PER_KM = 0.1;
 
@@ -17,13 +15,12 @@ type Address = {
   longitude: string;
 };
 
-export const Ride = () => {
+export const Offer = () => {
   const [fromAddress, setFromAddress] = useState<Address>();
   const [toAddress, setToAddress] = useState<Address>();
-  const [routeDistance, setRouteDistance] = useState(0);
   const [selectedSeats, setSelectedSeats] = useState(1);
+  const [costPerKm, setCostPerKm] = useState(0.1);
   const [routeJSON, setRouteJSON] = useState([]);
-  const [showDrivers, setShowDrivers] = useState(false);
 
   const getOptimizedRoute = () => {
     if (!fromAddress || !toAddress) {
@@ -37,7 +34,6 @@ export const Ride = () => {
       .then((data) => {
         if (data.trips.length > 0) {
           setRouteJSON(data.trips[0].geometry.coordinates);
-          setRouteDistance(data.trips[0].distance / 1000);
         } else {
           setRouteJSON([]);
         }
@@ -56,16 +52,12 @@ export const Ride = () => {
     getOptimizedRoute();
   }, [fromAddress, toAddress]);
 
-  const cost = COST_PER_KM * selectedSeats * routeDistance;
 
   return (
-    <div className="map__view">
-      <RidersModal onDriverClicked={(d) => {
-        console.log(d)
-      }} seatsRequired={selectedSeats} distance={routeDistance} show={showDrivers} onClose={() => setShowDrivers(false)} />
+    <div className="offer_map__view">
       <div className="ride__selection">
         <div className="head">
-          <h3>Find a ride</h3>
+          <h3>Offer a ride</h3>
           <p>From</p>
           <AlgoliaPlaces
             placeholder="From"
@@ -103,6 +95,8 @@ export const Ride = () => {
               })
             }
           />
+          <p>Cost Per Km (Sol)</p>
+          <TextInput value={costPerKm} onChange={(e: any) => setCostPerKm(e.target.value)} type="number" className="input" width="100%" height={40} borderWidth={1} borderColor="#ccc" fontSize={16} fontWeight={400} placeholder="Cost per km" />
           <p>Seats</p>
           <Select
             onChange={(event) =>
@@ -116,15 +110,9 @@ export const Ride = () => {
             <option value="3">3</option>
             <option value="4">4</option>
           </Select>
-          {!!cost && (
-            <div>
-              <h3>Estimated Cost</h3>
-              <p>{cost} Sol</p>
-            </div>
-          )}
         </div>
-        {<Button disabled={!cost} className="find__ride" onClick={() => setShowDrivers(true)}>
-          Find Ride
+        {<Button disabled={!fromAddress || !toAddress || !selectedSeats || !costPerKm} className="find__ride" onClick={() => {}}>
+          Add Ride
         </Button>}
       </div>
       <div className="map">

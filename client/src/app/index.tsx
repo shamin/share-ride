@@ -4,6 +4,7 @@ import "./index.scss";
 import { Dashboard } from "./pages/dashboard/dashboard";
 import { Home } from "./pages/home/home";
 import { Ride } from "./pages/ride/ride";
+import { Offer } from "./pages/offer/offer";
 
 const routes = [
   {
@@ -21,6 +22,12 @@ const routes = [
   {
     path: "ride",
     component: Ride,
+    isExact: false,
+    private: true,
+  },
+  {
+    path: "offer",
+    component: Offer,
     isExact: false,
     private: true,
   },
