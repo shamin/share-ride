@@ -121,7 +121,7 @@ export const Offer = () => {
               setSelectedSeats(parseInt(event.target.value, 10))
             }
           >
-            <option value="1" selected>
+            <option value="1">
               1
             </option>
             <option value="2">2</option>
