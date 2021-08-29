@@ -1,0 +1,16 @@
+[package]
+name = "share-ride-escrow"
+version = "0.1.0"
+description = "Share ride middleman"
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "share_ride_escrow"
+
+[features]
+no-entrypoint = []
+cpi = ["no-entrypoint"]
+
+[dependencies]
+anchor-lang = "0.13.2"
