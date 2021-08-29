@@ -1,7 +1,12 @@
 import { SideBar } from "./components/sidebar";
-import './dashboard.scss';
+import "./dashboard.scss";
+import React from "react";
 
-export const Dashboard: React.FC = ({ children }) => <div>
-    <SideBar />
-    <div className="main">{children}</div>
-</div>
+export const Dashboard: React.FC = ({ children  }) => {
+  return (
+      <div>
+        <SideBar />
+        <div className="main">{children}</div>
+      </div>
+  );
+};

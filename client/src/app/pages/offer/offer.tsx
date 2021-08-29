@@ -4,7 +4,7 @@ import ReactMapGL, { Marker } from "react-map-gl";
 import { Select, Button, MapMarkerIcon, TextInput } from "evergreen-ui";
 //@ts-expect-error
 import AlgoliaPlaces from "algolia-places-react";
-import { PolylineOverlay } from "./PloyLineOverlay";
+import { PolylineOverlay } from "./PolyLineOverlay";
 import { useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";

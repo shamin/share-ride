@@ -4,11 +4,12 @@ import ReactMapGL, { Marker } from "react-map-gl";
 import { Select, Button, MapMarkerIcon } from "evergreen-ui";
 //@ts-expect-error
 import AlgoliaPlaces from "algolia-places-react";
-import { PolylineOverlay } from "./PloyLineOverlay";
+import { PolylineOverlay } from "./PolyLineOverlay";
 import { useEffect } from "react";
 import { RidersModal } from "./Riders";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useDrivers } from "../../../solana/useDrivers";
 
 const COST_PER_KM = 0.1;
 
@@ -26,6 +27,14 @@ export const Ride = () => {
   const [routeJSON, setRouteJSON] = useState([]);
   const [showDrivers, setShowDrivers] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
+
+  const { drivers, getDrivers } = useDrivers();
+
+  useEffect(() => {
+    getDrivers();
+  }, [])
+
+  console.log(drivers);
 
   const getOptimizedRoute = () => {
     if (!fromAddress || !toAddress) {
