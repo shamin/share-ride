@@ -1,0 +1,35 @@
+.map__view {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  .ride__selection {
+    min-width: 20%;
+    box-sizing: border-box;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .find__ride {
+    background: #08143b;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 24px 0px;
+    border-radius: 50px;
+    &:hover {
+      background: #08143b;
+    }
+  }
+  .map {
+    flex: 1;
+  }
+}
+
+.car {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #1f6a30;
+  pointer-events: none;
+}
