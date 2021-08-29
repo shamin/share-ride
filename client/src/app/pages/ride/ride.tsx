@@ -4,10 +4,11 @@ import ReactMapGL, { Marker } from "react-map-gl";
 import { Select, Button, MapMarkerIcon } from "evergreen-ui";
 //@ts-expect-error
 import AlgoliaPlaces from "algolia-places-react";
-import * as turf from "@turf/turf";
 import { PolylineOverlay } from "./PloyLineOverlay";
 import { useEffect } from "react";
 import { RidersModal } from "./Riders";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const COST_PER_KM = 0.1;
 
@@ -24,6 +25,7 @@ export const Ride = () => {
   const [selectedSeats, setSelectedSeats] = useState(1);
   const [routeJSON, setRouteJSON] = useState([]);
   const [showDrivers, setShowDrivers] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
 
   const getOptimizedRoute = () => {
     if (!fromAddress || !toAddress) {
@@ -60,9 +62,15 @@ export const Ride = () => {
 
   return (
     <div className="map__view">
-      <RidersModal onDriverClicked={(d) => {
-        console.log(d)
-      }} seatsRequired={selectedSeats} distance={routeDistance} show={showDrivers} onClose={() => setShowDrivers(false)} />
+      <RidersModal
+        onDriverClicked={(d) => {
+          console.log(d);
+        }}
+        seatsRequired={selectedSeats}
+        distance={routeDistance}
+        show={showDrivers}
+        onClose={() => setShowDrivers(false)}
+      />
       <div className="ride__selection">
         <div className="head">
           <h3>Find a ride</h3>
@@ -103,6 +111,13 @@ export const Ride = () => {
               })
             }
           />
+          <p>Date</p>
+          <DatePicker
+            className="input"
+            selected={startDate}
+            onChange={(date) => setStartDate(date as Date)}
+          />
+
           <p>Seats</p>
           <Select
             onChange={(event) =>
@@ -123,9 +138,15 @@ export const Ride = () => {
             </div>
           )}
         </div>
-        {<Button disabled={!cost} className="find__ride" onClick={() => setShowDrivers(true)}>
-          Find Ride
-        </Button>}
+        {
+          <Button
+            disabled={!cost}
+            className="find__ride"
+            onClick={() => setShowDrivers(true)}
+          >
+            Find Ride
+          </Button>
+        }
       </div>
       <div className="map">
         <ReactMapGL

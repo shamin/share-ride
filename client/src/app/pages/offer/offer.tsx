@@ -6,8 +6,8 @@ import { Select, Button, MapMarkerIcon, TextInput } from "evergreen-ui";
 import AlgoliaPlaces from "algolia-places-react";
 import { PolylineOverlay } from "./PloyLineOverlay";
 import { useEffect } from "react";
-
-const COST_PER_KM = 0.1;
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 type Address = {
   address: string;
@@ -21,6 +21,7 @@ export const Offer = () => {
   const [selectedSeats, setSelectedSeats] = useState(1);
   const [costPerKm, setCostPerKm] = useState(0.1);
   const [routeJSON, setRouteJSON] = useState([]);
+  const [startDate, setStartDate] = useState(new Date());
 
   const getOptimizedRoute = () => {
     if (!fromAddress || !toAddress) {
@@ -51,7 +52,6 @@ export const Offer = () => {
   useEffect(() => {
     getOptimizedRoute();
   }, [fromAddress, toAddress]);
-
 
   return (
     <div className="offer_map__view">
@@ -95,8 +95,26 @@ export const Offer = () => {
               })
             }
           />
+          <p>Date</p>
+          <DatePicker
+            className="input__date"
+            selected={startDate}
+            onChange={(date) => setStartDate(date as Date)}
+          />
           <p>Cost Per Km (Sol)</p>
-          <TextInput value={costPerKm} onChange={(e: any) => setCostPerKm(e.target.value)} type="number" className="input" width="100%" height={40} borderWidth={1} borderColor="#ccc" fontSize={16} fontWeight={400} placeholder="Cost per km" />
+          <TextInput
+            value={costPerKm}
+            onChange={(e: any) => setCostPerKm(e.target.value)}
+            type="number"
+            className="input"
+            width="100%"
+            height={40}
+            borderWidth={1}
+            borderColor="#ccc"
+            fontSize={16}
+            fontWeight={400}
+            placeholder="Cost per km"
+          />
           <p>Seats</p>
           <Select
             onChange={(event) =>
@@ -111,9 +129,17 @@ export const Offer = () => {
             <option value="4">4</option>
           </Select>
         </div>
-        {<Button disabled={!fromAddress || !toAddress || !selectedSeats || !costPerKm} className="find__ride" onClick={() => {}}>
-          Add Ride
-        </Button>}
+        {
+          <Button
+            disabled={
+              !fromAddress || !toAddress || !selectedSeats || !costPerKm
+            }
+            className="find__ride"
+            onClick={() => {}}
+          >
+            Add Ride
+          </Button>
+        }
       </div>
       <div className="map">
         <ReactMapGL

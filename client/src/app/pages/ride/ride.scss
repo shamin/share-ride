@@ -2,6 +2,21 @@
   display: flex;
   width: 100%;
   box-sizing: border-box;
+  .input {
+    font-family: Poppins, sans-serif;
+    color: #000;
+    font-weight: 500;
+    width: 100%;
+    padding-right: 16px;
+    padding-left: 16px;
+    box-sizing: border-box;
+    line-height: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    outline: none;
+    font: inherit;
+  }
   .ride__selection {
     min-width: 20%;
     box-sizing: border-box;
