@@ -1,0 +1,41 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 200;
+  margin: 0;
+  padding: 0;
+  background: #08143b;
+}
+
+.navbar {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 30px;
+  padding-top: 24px;
+  height: 100vh;
+  width: 64px;
+}
+
+.nav__icon {
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+  align-items: center;
+}
+
+.icon__button {
+  margin: 5px auto;
+  svg {
+    fill: #fff !important;
+  }
+  transition: 0.5s ease;
+  &:hover {
+    transition: 0.5s ease;
+    background: rgba(255, 255, 255, 0.1) !important;
+  }
+}

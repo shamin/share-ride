@@ -1,0 +1,61 @@
+.offer_map__view {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  .input {
+    font-family: Poppins, sans-serif;
+    color: #000;
+    font-weight: 500;
+  }
+  .input__date {
+    font-family: Poppins, sans-serif;
+    color: #000;
+    font-weight: 500;
+    width: 100%;
+    padding-right: 16px;
+    padding-left: 16px;
+    box-sizing: border-box;
+    line-height: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    outline: none;
+    font: inherit;
+  }
+  .ride__selection {
+    min-width: 20%;
+    box-sizing: border-box;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .find__ride {
+    background: #08143b;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 24px 0px;
+    border-radius: 50px;
+    &:hover {
+      background: #08143b;
+    }
+    &:disabled {
+      background: #fff;
+      border-color: #e6e8f0;
+      color: #c1c4d6;
+      cursor: not-allowed !important;
+    }
+  }
+  .map {
+    flex: 1;
+  }
+}
+
+.car {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #1f6a30;
+  pointer-events: none;
+}
