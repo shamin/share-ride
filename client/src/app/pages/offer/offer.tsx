@@ -8,6 +8,7 @@ import { PolylineOverlay } from "./PolyLineOverlay";
 import { useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useDrivers } from "../../hooks/useDriver";
 
 type Address = {
   address: string;
@@ -22,6 +23,10 @@ export const Offer = () => {
   const [costPerKm, setCostPerKm] = useState(0.1);
   const [routeJSON, setRouteJSON] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
+
+  const { addDriver, drivers } = useDrivers();
+
+  console.log(drivers);
 
   const getOptimizedRoute = () => {
     if (!fromAddress || !toAddress) {
@@ -51,7 +56,15 @@ export const Offer = () => {
 
   useEffect(() => {
     getOptimizedRoute();
-  }, [fromAddress, toAddress]);
+  }, [JSON.stringify(fromAddress), JSON.stringify(toAddress)]);
+
+  const driver = {
+    fromAddress,
+    toAddress,
+    selectedSeats,
+    costPerKm,
+    startDate,
+  };
 
   return (
     <div className="offer_map__view">
@@ -121,9 +134,7 @@ export const Offer = () => {
               setSelectedSeats(parseInt(event.target.value, 10))
             }
           >
-            <option value="1">
-              1
-            </option>
+            <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
@@ -135,7 +146,9 @@ export const Offer = () => {
               !fromAddress || !toAddress || !selectedSeats || !costPerKm
             }
             className="find__ride"
-            onClick={() => {}}
+            onClick={() => {
+              addDriver(driver);
+            }}
           >
             Add Ride
           </Button>

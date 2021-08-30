@@ -1,15 +1,14 @@
 import "./login.scss";
 import Logo from "../../../assets/images/logo.png";
 import { useHistory } from "react-router-dom";
-import { connectWallet, getSolanaWallet, WalletType } from "../../../solana/wallet";
+import { connectWallet, WalletType } from "../../../web3/wallet";
 import { Button } from "evergreen-ui";
-import { useEffect } from "react";
 
 export const Login = () => {
   const history = useHistory();
 
   const initializeWallet = async () => {
-    await connectWallet(WalletType.SOLLET);
+    await connectWallet(WalletType.PHANTOM);
     history.push('/')
   }
 

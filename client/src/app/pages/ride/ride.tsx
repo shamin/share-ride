@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { RidersModal } from "./Riders";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useDrivers } from "../../../solana/useDrivers";
+import { useDrivers } from "../../hooks/useDriver";
 
 const COST_PER_KM = 0.1;
 
@@ -27,19 +27,14 @@ export const Ride = () => {
   const [routeJSON, setRouteJSON] = useState([]);
   const [showDrivers, setShowDrivers] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
-  const [initialized, setInitialized] = useState(false);
 
-  const { drivers, initialize, getDrivers } = useDrivers(setInitialized);
+  const { drivers, getDrivers } = useDrivers();
 
   useEffect(() => {
     getDrivers();
   }, [])
 
-  // useEffect(() => {
-  //   getDrivers();
-  // }, [initialized])
-
-  console.log(drivers);
+  console.log(drivers)
 
   const getOptimizedRoute = () => {
     if (!fromAddress || !toAddress) {

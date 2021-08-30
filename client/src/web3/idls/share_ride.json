@@ -66,23 +66,7 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "address",
-            "type": "string"
-          },
-          {
-            "name": "location",
-            "type": "string"
-          },
-          {
-            "name": "date",
-            "type": "string"
-          },
-          {
-            "name": "seats",
-            "type": "u8"
-          },
-          {
-            "name": "cost",
+            "name": "archive",
             "type": "string"
           }
         ]
@@ -97,6 +81,6 @@
     }
   ],
   "metadata": {
-    "address": "AzPtkVC9ccTWdTwZw9vvnsFa94FmhDvy4UPtKvXP6s9M"
+    "address": "NZSvXFagbuxJadzz8ReY6G18G5X8WD9iHW59aCU9XFL"
   }
 }
