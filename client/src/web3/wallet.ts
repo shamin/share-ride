@@ -7,12 +7,11 @@ export enum WalletType {
   SOLLET
 }
 let _wallet: WalletAdapter
-const getSolanaWallet = (): WalletAdapter => {
+const getSolanaWallet = (): WalletAdapter | null => {
   if (_wallet) {
     return _wallet
   }
-  _wallet = new PhantomWalletAdapter()
-  return _wallet
+  return null;
 }
 // Here we will pass wallet type right
 const connectWallet = async (wallet: WalletType): Promise<WalletAdapter> => {
@@ -53,4 +52,8 @@ const disconnectWallet = () => {
   }
 }
 
-export { getSolanaWallet, connectWallet, disconnectWallet }
+const initializeWallet = async () => {
+  await connectWallet(WalletType.PHANTOM);
+}
+
+export { getSolanaWallet, connectWallet, disconnectWallet, initializeWallet }

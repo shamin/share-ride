@@ -10,6 +10,7 @@ import { RidersModal } from "./Riders";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useDrivers } from "../../hooks/useDriver";
+import { findDrivers } from "./utils";
 
 const COST_PER_KM = 0.1;
 
@@ -27,14 +28,13 @@ export const Ride = () => {
   const [routeJSON, setRouteJSON] = useState([]);
   const [showDrivers, setShowDrivers] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
+  const [matchingDivers, setMatchingDrivers] = useState([]);
 
   const { drivers, getDrivers } = useDrivers();
 
   useEffect(() => {
     getDrivers();
   }, [])
-
-  console.log(drivers)
 
   const getOptimizedRoute = () => {
     if (!fromAddress || !toAddress) {
@@ -65,7 +65,12 @@ export const Ride = () => {
 
   useEffect(() => {
     getOptimizedRoute();
-  }, [fromAddress, toAddress]);
+    if(fromAddress && toAddress) {
+      const m = findDrivers({fromAddress, toAddress, startDate}, drivers);
+      console.log(m);
+      setMatchingDrivers(m);
+    }
+  }, [fromAddress, toAddress, startDate]);
 
   const cost = COST_PER_KM * selectedSeats * routeDistance;
 
@@ -77,6 +82,7 @@ export const Ride = () => {
         }}
         seatsRequired={selectedSeats}
         distance={routeDistance}
+        drivers={matchingDivers}
         show={showDrivers}
         onClose={() => setShowDrivers(false)}
       />

@@ -2,7 +2,15 @@ import { FunctionComponent } from "react";
 import "./sidebar.scss";
 import Logo from "../../../../assets/images/logo-white.png";
 import { useHistory } from "react-router-dom";
-import { IconButton, HomeIcon, LogOutIcon, PanelTableIcon } from "evergreen-ui";
+import {
+  IconButton,
+  HomeIcon,
+  LogOutIcon,
+  PanelTableIcon,
+  NewLinkIcon,
+  PathSearchIcon,
+  Tooltip,
+} from "evergreen-ui";
 
 interface SideBarProps {}
 
@@ -14,21 +22,34 @@ export const SideBar: FunctionComponent<SideBarProps> = () => {
         <div>
           <img width={50} height={50} src={Logo} alt="logo" />
           <div className="nav__icon">
-            <IconButton
-              className="icon__button"
-              appearance="minimal"
-              color="white"
-              height={50}
-              icon={HomeIcon}
-              onClick={() => history.push("/")}
-            />
-            <IconButton
-              className="icon__button"
-              appearance="minimal"
-              height={50}
-              icon={PanelTableIcon}
-              onClick={() => history.push("/responses")}
-            />
+            <Tooltip position="right" content="Home">
+              <IconButton
+                className="icon__button"
+                appearance="minimal"
+                color="white"
+                height={50}
+                icon={HomeIcon}
+                onClick={() => history.push("/")}
+              />
+            </Tooltip>
+            <Tooltip position="right" content="Find ride">
+              <IconButton
+                className="icon__button"
+                appearance="minimal"
+                height={50}
+                icon={PathSearchIcon}
+                onClick={() => history.push("/ride")}
+              />
+            </Tooltip>
+            <Tooltip position="right" content="Offer ride">
+              <IconButton
+                className="icon__button"
+                appearance="minimal"
+                height={50}
+                icon={NewLinkIcon}
+                onClick={() => history.push("/offer")}
+              />
+            </Tooltip>
           </div>
         </div>
         <IconButton

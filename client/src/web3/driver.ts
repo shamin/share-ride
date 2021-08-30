@@ -28,9 +28,13 @@ export class DriversSolana {
   program?: Program;
 
   constructor() {
+    const wallet  = getSolanaWallet();
+    if(!wallet) {
+      return;
+    }
     this.provider = new Provider(
       new Connection(SolanaNetworks.LOCAL),
-      getSolanaWallet(),
+      wallet,
       {}
     );
     this.program = new Program(shareRideIdl as Idl, programId, this.provider);

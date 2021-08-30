@@ -1,16 +1,22 @@
 import "./login.scss";
 import Logo from "../../../assets/images/logo.png";
 import { useHistory } from "react-router-dom";
-import { connectWallet, WalletType } from "../../../web3/wallet";
+import { initializeWallet, WalletType } from "../../../web3/wallet";
 import { Button } from "evergreen-ui";
+import { useEffect } from "react";
 
 export const Login = () => {
   const history = useHistory();
 
-  const initializeWallet = async () => {
-    await connectWallet(WalletType.PHANTOM);
-    history.push('/')
-  }
+
+
+  useEffect(() => {
+    const initialize = async() => {
+      await initializeWallet();
+      history.push('/');
+    }
+    initialize();
+  }, [])
 
   return (
     <div className="container">
@@ -18,7 +24,7 @@ export const Login = () => {
         <img alt="share ride logo" src={Logo} />
         <h3>Welcome back to share ride</h3>
         <p>Ready to go somewhere? Connect your wallet to get started.</p>
-        <Button onClick={() => initializeWallet()}>Connect with wallet</Button>
+        <Button>Connect with wallet</Button>
       </div>
     </div>
   );
