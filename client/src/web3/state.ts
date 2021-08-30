@@ -59,10 +59,12 @@ export class StateSolana {
   getDrivers() {
     return new Promise(async (resolve, reject) => {
       if (!this.program) {
+        console.log("here");
         return [];
       }
       try {
         const state = await this.program.state.fetch();
+        console.log("in state", (state as any).drivers);
         resolve((state as any).drivers);
       } catch (err) {
         reject("State not initialized");

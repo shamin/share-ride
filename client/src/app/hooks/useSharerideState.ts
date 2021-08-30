@@ -19,9 +19,11 @@ export const useSharerideState = () => {
     try {
       setDriversLoading(true);
       const drivers = await solanaStateServices.current.getDrivers();
+      console.log(drivers);
       const filteredDrivers = (drivers as Driver[]).filter(
         ({ archive }: any) => archive !== DUMMY_TX_ID
       );
+      console.log(filteredDrivers);
       const driverData = await arweaveService.getData(filteredDrivers);
       console.log(driverData);
       setDrivers(driverData);

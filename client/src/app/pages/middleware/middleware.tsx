@@ -9,5 +9,7 @@ export const MiddleWare: React.FC = ({ children }) => {
     }
   }, []);
 
+
+
   return <>{children}</>;
 };
