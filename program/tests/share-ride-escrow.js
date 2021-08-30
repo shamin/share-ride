@@ -21,7 +21,7 @@ describe("escrow", () => {
   
   const driver = provider.wallet;
 
-  it("Initialise escrow state", async () => {
+  it("Initialise state", async () => {
     await provider.connection.confirmTransaction(
       await provider.connection.requestAirdrop(payer.publicKey, 10000000000),
       "confirmed"
