@@ -74,7 +74,15 @@
             "type": "string"
           },
           {
-            "name": "seat",
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "seats",
+            "type": "u8"
+          },
+          {
+            "name": "cost",
             "type": "string"
           }
         ]
@@ -89,6 +97,6 @@
     }
   ],
   "metadata": {
-    "address": "CaoSvYjno7TDGV8i9K34fgkKvUQ9weXHW4iCMdbvxtDg"
+    "address": "AzPtkVC9ccTWdTwZw9vvnsFa94FmhDvy4UPtKvXP6s9M"
   }
 }

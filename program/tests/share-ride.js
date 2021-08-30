@@ -1,6 +1,8 @@
 const assert = require("assert");
 const anchor = require("@project-serum/anchor");
 
+const ADDRESS_LENGTH = 44;
+
 class Driver {
   constructor(properties) {
     Object.keys(properties).map((key) => {
@@ -23,13 +25,15 @@ describe("share-ride", () => {
       },
     });
     const state = await program.state.fetch();
-    assert.ok(state.drivers.length === 10);
+    assert.ok(state.drivers.length === 5);
   });
 
   const value = new Driver({
-    address: "asdfrghld",
-    location: "qwsderefd",
-    seat: "zxcdserdf",
+    address: "asdfgjkljkqwershajsasasaskoikhjwkasasasasasa",
+    location: "-90.00000001:-180.00000001", 
+    date: "1234567890",
+    seats: 1,
+    cost: "0.5",
   });
 
   it("Executes a method on the program", async () => {
@@ -39,6 +43,7 @@ describe("share-ride", () => {
       },
     });
     const state = await program.state.fetch();
-    assert.ok(state.drivers.length === 10);
+    console.log(state)
+    assert.ok(state.drivers.length === 5);
   });
 });

@@ -4,7 +4,6 @@ import { programId } from "./program";
 import { connectWallet, getSolanaWallet, WalletType } from "./wallet";
 import { useState } from "react";
 
-
 enum SolanaNetworks {
   DEV = "https://api.devnet.solana.com",
   TEST = "https://api.testnet.solana.com",
@@ -33,12 +32,18 @@ export class DriversSolana {
     if (!this.program || !this.provider) {
       return;
     }
+    console.log("initializing");
     console.log(this.provider.wallet.publicKey);
-    await this.program.state.rpc.new({
-      accounts: {
-        authority: this.provider.wallet.publicKey,
-      },
-    });
+    try {
+      await this.program.state.rpc.new({
+        accounts: {
+          authority: this.provider.wallet.publicKey,
+        },
+      });
+      console.log(this.program);
+    } catch (err) {
+      console.log(this.program);
+    }
   }
 
   async getDrivers() {
@@ -50,7 +55,7 @@ export class DriversSolana {
   }
 }
 
-export const useDrivers = () => {
+export const useDrivers = (setInitialized: any) => {
   const [drivers, setDrivers] = useState([]);
   let driversInstance: any;
 
@@ -60,16 +65,16 @@ export const useDrivers = () => {
   };
 
   const getDrivers = async () => {
-    if(!driversInstance) {
+    if (!driversInstance) {
       await initialize();
     }
     const drivers = await driversInstance.getDrivers();
     setDrivers(drivers);
-  }
+  };
 
   return {
     initialize,
     getDrivers,
-    drivers
+    drivers,
   };
 };

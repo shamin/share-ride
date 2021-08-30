@@ -27,12 +27,17 @@ export const Ride = () => {
   const [routeJSON, setRouteJSON] = useState([]);
   const [showDrivers, setShowDrivers] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
+  const [initialized, setInitialized] = useState(false);
 
-  const { drivers, getDrivers } = useDrivers();
+  const { drivers, initialize, getDrivers } = useDrivers(setInitialized);
 
   useEffect(() => {
     getDrivers();
   }, [])
+
+  // useEffect(() => {
+  //   getDrivers();
+  // }, [initialized])
 
   console.log(drivers);
 

@@ -14,10 +14,16 @@ pub mod share_ride {
     }
 
     impl ShareRideState {
-        pub const DRIVER_SIZE: usize = 10;
+        pub const DRIVER_SIZE: usize = 5;
         pub fn new(ctx: Context<Auth>) -> Result<Self> {
             let mut drivers = vec![];
-            drivers.resize(Self::DRIVER_SIZE, Driver { address: String::from("123456789"), location: String::from("123456789"), seat: String::from("123456789")});
+            drivers.resize(Self::DRIVER_SIZE, Driver { 
+                address: String::from("____________________________________________"), 
+                location: String::from("__________________________"), 
+                date: String::from("__________"),
+                seats: 1,
+                cost: String::from("__________"),
+            });
             Ok(Self {
                 authority: *ctx.accounts.authority.key,
                 drivers,
@@ -50,7 +56,9 @@ pub struct Auth<'info> {
 pub struct Driver {
     address: String,
     location: String,
-    seat: String,
+    date: String,
+    seats: u8,
+    cost: String,
 }
 
 #[error]

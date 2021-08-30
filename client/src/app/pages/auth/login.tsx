@@ -9,7 +9,7 @@ export const Login = () => {
   const history = useHistory();
 
   const initializeWallet = async () => {
-    await connectWallet(WalletType.PHANTOM);
+    await connectWallet(WalletType.SOLLET);
     history.push('/')
   }
 
