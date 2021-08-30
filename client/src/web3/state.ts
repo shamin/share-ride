@@ -22,7 +22,7 @@ enum SolanaNetworks {
   LOCAL = "http://127.0.0.1:8899",
 }
 
-export class DriversSolana {
+export class StateSolana {
   provider?: Provider;
 
   program?: Program;
@@ -81,6 +81,40 @@ export class DriversSolana {
         archive: txid,
       });
       await this.program.state.rpc.addDriver(driver, {
+        accounts: {
+          authority: this.provider.wallet.publicKey,
+        },
+      });
+    } catch {
+      console.log("Error while adding driver");
+    }
+  }
+
+  getRides() {
+    return new Promise(async (resolve, reject) => {
+      if (!this.program) {
+        return [];
+      }
+      try {
+        const state = await this.program.state.fetch();
+        resolve((state as any).rides);
+      } catch (err) {
+        reject("State not initialized");
+      }
+    });
+  }
+
+  async addRides(rideData: any) {
+    if (!this.program || !this.provider) {
+      return;
+    }
+    try {
+      const txid = await arweaveService.saveData(rideData);
+      console.log("Arweave txid", txid)
+      const driver = new Driver({
+        archive: txid,
+      });
+      await this.program.state.rpc.addRide(driver, {
         accounts: {
           authority: this.provider.wallet.publicKey,
         },

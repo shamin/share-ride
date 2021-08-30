@@ -16,12 +16,24 @@
             "name": "drivers",
             "type": {
               "vec": {
-                "defined": "Driver"
+                "defined": "Archive"
               }
             }
           },
           {
-            "name": "index",
+            "name": "rides",
+            "type": {
+              "vec": {
+                "defined": "Archive"
+              }
+            }
+          },
+          {
+            "name": "indexDrivers",
+            "type": "i32"
+          },
+          {
+            "name": "indexRides",
             "type": "i32"
           }
         ]
@@ -52,7 +64,25 @@
           {
             "name": "driver",
             "type": {
-              "defined": "Driver"
+              "defined": "Archive"
+            }
+          }
+        ]
+      },
+      {
+        "name": "addRide",
+        "accounts": [
+          {
+            "name": "authority",
+            "isMut": false,
+            "isSigner": true
+          }
+        ],
+        "args": [
+          {
+            "name": "driver",
+            "type": {
+              "defined": "Archive"
             }
           }
         ]
@@ -61,7 +91,7 @@
   },
   "types": [
     {
-      "name": "Driver",
+      "name": "Archive",
       "type": {
         "kind": "struct",
         "fields": [
@@ -81,6 +111,6 @@
     }
   ],
   "metadata": {
-    "address": "NZSvXFagbuxJadzz8ReY6G18G5X8WD9iHW59aCU9XFL"
+    "address": "6tBqPhqWALi3R49tEbWwqPUYVhucWUPRWfmDxFPKp9Fo"
   }
 }

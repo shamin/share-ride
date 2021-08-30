@@ -14,7 +14,7 @@ import { PolylineOverlay } from "./PolyLineOverlay";
 import { useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useDrivers } from "../../hooks/useDriver";
+import { useSharerideState } from "../../hooks/useSharerideState";
 import { getSolanaWallet } from "../../../web3/wallet";
 import { useHistory } from "react-router-dom";
 
@@ -40,7 +40,7 @@ export const Offer = () => {
     loading,
     showCompleteModal,
     setShowCompleteModal,
-  } = useDrivers();
+  } = useSharerideState();
 
   const history = useHistory();
 

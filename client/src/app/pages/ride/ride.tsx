@@ -1,7 +1,7 @@
 import "./ride.scss";
 import { useState } from "react";
 import ReactMapGL, { Marker } from "react-map-gl";
-import { Select, Button, MapMarkerIcon } from "evergreen-ui";
+import { Select, Button, MapMarkerIcon, CornerDialog } from "evergreen-ui";
 //@ts-expect-error
 import AlgoliaPlaces from "algolia-places-react";
 import { PolylineOverlay } from "./PolyLineOverlay";
@@ -9,8 +9,10 @@ import { useEffect } from "react";
 import { RidersModal } from "./Riders";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useDrivers } from "../../hooks/useDriver";
+import { useSharerideState } from "../../hooks/useSharerideState";
 import { findDrivers } from "./utils";
+import { getSolanaWallet } from "../../../web3/wallet";
+import { useHistory } from "react-router-dom";
 
 const COST_PER_KM = 0.1;
 
@@ -29,12 +31,25 @@ export const Ride = () => {
   const [showDrivers, setShowDrivers] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [matchingDivers, setMatchingDrivers] = useState([]);
+  const wallet = getSolanaWallet();
+  const walletKey = wallet?.publicKey?.toBase58();
 
-  const { drivers, getDrivers } = useDrivers();
+  const {
+    drivers,
+    getDrivers,
+    getRides,
+    addRide,
+    loading,
+    setShowCompleteModal,
+    showCompleteModal,
+  } = useSharerideState();
 
   useEffect(() => {
     getDrivers();
-  }, [])
+    getRides();
+  }, []);
+
+  const history = useHistory();
 
   const getOptimizedRoute = () => {
     if (!fromAddress || !toAddress) {
@@ -65,8 +80,8 @@ export const Ride = () => {
 
   useEffect(() => {
     getOptimizedRoute();
-    if(fromAddress && toAddress) {
-      const m = findDrivers({fromAddress, toAddress, startDate}, drivers);
+    if (fromAddress && toAddress) {
+      const m = findDrivers({ fromAddress, toAddress, startDate }, drivers);
       console.log(m);
       setMatchingDrivers(m);
     }
@@ -76,9 +91,24 @@ export const Ride = () => {
 
   return (
     <div className="map__view">
+      <CornerDialog
+        intent="success"
+        title="Ride Booked"
+        isShown={showCompleteModal}
+        confirmLabel="Show Rides"
+        onConfirm={() => history.push("/")}
+        onCloseComplete={() => setShowCompleteModal(false)}
+      >
+        Hooray!, Your ride is successfully booked
+      </CornerDialog>
       <RidersModal
-        onDriverClicked={(d) => {
-          console.log(d);
+        onDriverClicked={(d: any) => {
+          const ride = {
+            ...d,
+            driver: d.walletKey,
+            riderKey: walletKey,
+          };
+          addRide(ride);
         }}
         seatsRequired={selectedSeats}
         distance={routeDistance}
@@ -157,6 +187,7 @@ export const Ride = () => {
           <Button
             disabled={!cost}
             className="find__ride"
+            isLoading={loading}
             onClick={() => setShowDrivers(true)}
           >
             Find Ride

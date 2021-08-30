@@ -6,7 +6,6 @@ import {
   IconButton,
   HomeIcon,
   LogOutIcon,
-  PanelTableIcon,
   NewLinkIcon,
   PathSearchIcon,
   Tooltip,

@@ -9,36 +9,61 @@ pub mod share_ride {
     #[state]
     pub struct ShareRideState {
         pub authority: Pubkey,
-        pub drivers: Vec<Driver>,
-        pub index: i32,
+        pub drivers: Vec<Archive>,
+        pub rides: Vec<Archive>,
+        pub index_drivers: i32,
+        pub index_rides: i32,
     }
 
     impl ShareRideState {
         pub const DRIVER_SIZE: usize = 10;
         pub fn new(ctx: Context<Auth>) -> Result<Self> {
             let mut drivers = vec![];
-            drivers.resize(Self::DRIVER_SIZE, Driver { 
+            drivers.resize(Self::DRIVER_SIZE, Archive { 
+                archive: String::from("___________________________________________"), 
+            });
+            let mut rides = vec![];
+            rides.resize(Self::DRIVER_SIZE, Archive { 
                 archive: String::from("___________________________________________"), 
             });
             Ok(Self {
                 authority: *ctx.accounts.authority.key,
                 drivers,
-                index: 0,
+                rides,
+                index_drivers: 0,
+                index_rides: 0,
             })
         }
 
-        pub fn add_driver(&mut self, ctx: Context<Auth>, driver: Driver) -> Result<()> {
+        pub fn add_driver(&mut self, ctx: Context<Auth>, driver: Archive) -> Result<()> {
             if &self.authority != ctx.accounts.authority.key {
                 return Err(ErrorCode::Unauthorized.into());
             }
             msg!("New Driver {:?}", driver);
             msg!("Existing Drivers {:?}", self.drivers);
-            let num_usize: usize = self.index as usize;
+            let num_usize: usize = self.index_drivers as usize;
             msg!("U Size {:?}", num_usize);
             self.drivers[num_usize] = driver;
-            self.index += 1;
-            if self.index > 9 {
-                self.index = 0;
+            self.index_drivers += 1;
+            if self.index_drivers > 9 {
+                self.index_drivers = 0;
+            }
+            Ok(())
+        }
+
+
+        pub fn add_ride(&mut self, ctx: Context<Auth>, driver: Archive) -> Result<()> {
+            if &self.authority != ctx.accounts.authority.key {
+                return Err(ErrorCode::Unauthorized.into());
+            }
+            msg!("New Driver {:?}", driver);
+            msg!("Existing Rides {:?}", self.rides);
+            let num_usize: usize = self.index_rides as usize;
+            msg!("U Size {:?}", num_usize);
+            self.rides[num_usize] = driver;
+            self.index_rides += 1;
+            if self.index_rides > 9 {
+                self.index_rides = 0;
             }
             Ok(())
         }
@@ -52,7 +77,7 @@ pub struct Auth<'info> {
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Default, Clone, Debug)]
-pub struct Driver {
+pub struct Archive {
     archive: String,
 }
 
