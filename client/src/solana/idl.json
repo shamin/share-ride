@@ -1,0 +1,102 @@
+{
+  "version": "0.0.0",
+  "name": "share_ride",
+  "instructions": [],
+  "state": {
+    "struct": {
+      "name": "ShareRideState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "drivers",
+            "type": {
+              "vec": {
+                "defined": "Driver"
+              }
+            }
+          },
+          {
+            "name": "index",
+            "type": "i32"
+          }
+        ]
+      }
+    },
+    "methods": [
+      {
+        "name": "new",
+        "accounts": [
+          {
+            "name": "authority",
+            "isMut": false,
+            "isSigner": true
+          }
+        ],
+        "args": []
+      },
+      {
+        "name": "addDriver",
+        "accounts": [
+          {
+            "name": "authority",
+            "isMut": false,
+            "isSigner": true
+          }
+        ],
+        "args": [
+          {
+            "name": "driver",
+            "type": {
+              "defined": "Driver"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "types": [
+    {
+      "name": "Driver",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "seats",
+            "type": "u8"
+          },
+          {
+            "name": "cost",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 300,
+      "name": "Unauthorized",
+      "msg": "You are not authorized to perform this action."
+    }
+  ],
+  "metadata": {
+    "address": "AzPtkVC9ccTWdTwZw9vvnsFa94FmhDvy4UPtKvXP6s9M"
+  }
+}

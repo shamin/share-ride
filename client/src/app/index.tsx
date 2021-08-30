@@ -5,6 +5,9 @@ import { Dashboard } from "./pages/dashboard/dashboard";
 import { Home } from "./pages/home/home";
 import { Ride } from "./pages/ride/ride";
 import { Offer } from "./pages/offer/offer";
+import {
+  RecoilRoot,
+} from 'recoil';
 
 const routes = [
   {
@@ -35,19 +38,21 @@ const routes = [
 
 export const App = () => {
   return (
-    <Router>
-      <Switch>
-        <Dashboard>
-          {routes.map((route) => (
-            <Route
-              key={route.path}
-              exact={route.isExact}
-              path={`/${route.path}`}
-              component={route.component}
-            />
-          ))}
-        </Dashboard>
-      </Switch>
-    </Router>
+    <RecoilRoot>
+      <Router>
+        <Switch>
+          <Dashboard>
+            {routes.map((route) => (
+              <Route
+                key={route.path}
+                exact={route.isExact}
+                path={`/${route.path}`}
+                component={route.component}
+              />
+            ))}
+          </Dashboard>
+        </Switch>
+      </Router>
+    </RecoilRoot>
   );
 };
