@@ -48,5 +48,8 @@
     box-shadow: none;
     border-radius: 10px;
     cursor: pointer;
+    &:hover {
+      background-color: rgb(9, 20, 62);
+    }
   }
 }

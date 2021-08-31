@@ -44,10 +44,13 @@ export const Ride = () => {
     showCompleteModal,
   } = shareRideState;
 
-  // useEffect(() => {
-  //   loadDrivers();
-  //   loadRides();
-  // }, []);
+  useEffect(() => {
+    loadDrivers();
+    loadRides();
+    return () => {
+      setShowCompleteModal(false)
+    }
+  }, []);
 
   const history = useHistory();
 
@@ -83,7 +86,6 @@ export const Ride = () => {
     getOptimizedRoute();
     if (fromAddress && toAddress) {
       const m = findDrivers({ fromAddress, toAddress, startDate }, drivers);
-      console.log(m);
       setMatchingDrivers(m);
     }
   }, [fromAddress, toAddress, startDate]);
@@ -110,6 +112,7 @@ export const Ride = () => {
             riderKey: walletKey,
           };
           addRide(ride);
+          setShowDrivers(false);
         }}
         seatsRequired={selectedSeats}
         distance={routeDistance}

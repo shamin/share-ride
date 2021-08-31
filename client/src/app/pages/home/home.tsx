@@ -95,13 +95,15 @@ export const Home = () => {
   const history = useHistory();
   return (
     <div className="container__home">
-      {/* <div className="topBar">
-        {wallet ? (
-          <div>Balance:</div>
-        ) : (
-          <Button onClick={() => initializeWallet()}>Connect Wallet</Button>
-        )}
-      </div> */}
+      <div>
+        <h3>Get Started</h3>
+        <Button onClick={() => history.push("/ride")} className="finde__ride">
+          Find ride
+        </Button>
+        <Button onClick={() => history.push("/offer")} className="offer__ride">
+          Offer ride
+        </Button>
+      </div>
       <div className="upcoming__rides">
         {myUpcomingRides.length > 0 && (
           <>
@@ -166,15 +168,6 @@ export const Home = () => {
             </Table>
           </>
         )}
-      </div>
-      <div>
-        <h3>Get Started</h3>
-        <Button onClick={() => history.push("/ride")} className="finde__ride">
-          Find ride
-        </Button>
-        <Button onClick={() => history.push("/offer")} className="offer__ride">
-          Offer ride
-        </Button>
       </div>
     </div>
   );

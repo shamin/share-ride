@@ -46,6 +46,9 @@ export const Offer = () => {
 
   useEffect(() => {
     loadDrivers();
+    return () => {
+      setShowCompleteModal(false)
+    }
   }, []);
 
   const getOptimizedRoute = () => {
