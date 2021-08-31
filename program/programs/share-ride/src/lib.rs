@@ -35,10 +35,7 @@ pub mod share_ride {
             })
         }
 
-        pub fn add_driver(&mut self, ctx: Context<Auth>, driver: Archive) -> Result<()> {
-            if &self.authority != ctx.accounts.authority.key {
-                return Err(ErrorCode::Unauthorized.into());
-            }
+        pub fn add_driver(&mut self, _ctx: Context<Auth>, driver: Archive) -> Result<()> {
             msg!("New Driver {:?}", driver);
             msg!("Existing Drivers {:?}", self.drivers);
             let num_usize: usize = self.index_drivers as usize;
@@ -52,10 +49,7 @@ pub mod share_ride {
         }
 
 
-        pub fn add_ride(&mut self, ctx: Context<Auth>, driver: Archive) -> Result<()> {
-            if &self.authority != ctx.accounts.authority.key {
-                return Err(ErrorCode::Unauthorized.into());
-            }
+        pub fn add_ride(&mut self, _ctx: Context<Auth>, driver: Archive) -> Result<()> {
             msg!("New Driver {:?}", driver);
             msg!("Existing Rides {:?}", self.rides);
             let num_usize: usize = self.index_rides as usize;
