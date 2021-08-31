@@ -187,7 +187,6 @@ export const Ride = () => {
             </div>
           )}
         </div>
-        {
           <Button
             disabled={!cost}
             className="find__ride"
@@ -196,7 +195,6 @@ export const Ride = () => {
           >
             Find Ride
           </Button>
-        }
       </div>
       <div className="map">
         <ReactMapGL
