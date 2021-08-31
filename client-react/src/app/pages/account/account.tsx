@@ -6,7 +6,7 @@ import "./account.scss";
 interface AccountProps {}
 
 const Account: React.FC<AccountProps> = (props: AccountProps) => {
-  const { loadWallet, wallet } = useShareRide();
+  const { loadWallet, wallet, tokenAccount } = useShareRide();
 
   const initializeWallet = () => {
     loadWallet()
@@ -22,7 +22,7 @@ const Account: React.FC<AccountProps> = (props: AccountProps) => {
     <div className="container__account">
       <h1>Account</h1>
       {wallet ? (
-        <div>Balance:</div>
+        <div>Balance: {tokenAccount?.amount.toNumber()}</div>
       ) : (
         <Button onClick={() => initializeWallet()}>Connect Wallet</Button>
       )}

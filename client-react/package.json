@@ -7,7 +7,10 @@
   },
   "dependencies": {
     "@project-serum/anchor": "^0.13.2",
+    "@project-serum/serum": "^0.13.57",
+    "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.24.1",
+    "algolia-places-react": "^1.6.1",
     "arweave": "^1.10.16",
     "buffer": "^6.0.3",
     "eventemitter3": "^4.0.7",
@@ -18,8 +21,7 @@
     "react-map-gl": "^6.1.16",
     "react-router-dom": "^5.2.1",
     "rollup-plugin-polyfill-node": "^0.7.0",
-    "testweave-sdk": "^0.2.2",
-    "algolia-places-react": "^1.6.1"
+    "testweave-sdk": "^0.2.2"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",

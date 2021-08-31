@@ -2,9 +2,12 @@ import React, { createContext, useContext, useMemo, useState } from "react";
 import { useCallback } from "react";
 import { SolanaWallet } from "./wallet/types";
 import { connectWallet } from "./wallet";
-import { Connection } from "@solana/web3.js";
+import { Connection, PublicKey } from "@solana/web3.js";
 import { Provider as SolanaProvider } from "@project-serum/anchor";
 import { ShareRideState, useShareRideState } from "./state";
+import { getTokenAccount } from "./account/tokenAccount";
+import { mintPublicKey } from "./account/mint";
+import { AccountInfo } from "@solana/spl-token";
 
 enum SolanaNetworks {
   DEV = "https://api.devnet.solana.com",
@@ -16,7 +19,8 @@ enum SolanaNetworks {
 interface ShareRideProviderContextType {
   wallet?: SolanaWallet;
   loadWallet: () => Promise<void>;
-  shareRideState: ShareRideState
+  shareRideState: ShareRideState;
+  tokenAccount?: AccountInfo;
 }
 
 const ShareRideProviderContext = createContext<ShareRideProviderContextType>(
@@ -34,13 +38,26 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
 }: ShareRideProviderProviderProps) => {
   const [wallet, setWallet] = useState<SolanaWallet>();
   const [provider, setProvider] = useState<SolanaProvider>();
+  const [tokenAccount, setTokenAccount] = useState<AccountInfo>();
 
   const loadWallet = useCallback(async () => {
     const _wallet = await connectWallet();
     setWallet(_wallet);
-    setProvider(
-      new SolanaProvider(new Connection(SolanaNetworks.LOCAL), _wallet, {})
+    const provider = new SolanaProvider(
+      new Connection(SolanaNetworks.LOCAL),
+      _wallet,
+      {}
     );
+    setProvider(provider);
+
+    const tokenAcc = await getTokenAccount(
+      provider,
+      mintPublicKey,
+      new PublicKey("Fg8GVFCXnxiUo5Xjr2fMTsEN5HYaJN6SYCZWJJT6kYsK") // TODO: Change and retrive this
+    );
+    setTokenAccount(tokenAcc);
+    console.log(tokenAcc.amount.toNumber());
+
     console.log("Set wallet");
   }, []);
 
@@ -51,8 +68,9 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
       wallet,
       loadWallet,
       shareRideState,
+      tokenAccount,
     }),
-    [wallet, shareRideState]
+    [wallet, shareRideState, tokenAccount]
   );
 
   return (
