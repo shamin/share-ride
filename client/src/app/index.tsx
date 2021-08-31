@@ -5,34 +5,24 @@ import { Dashboard } from "./pages/dashboard/dashboard";
 import { Home } from "./pages/home/home";
 import { Ride } from "./pages/ride/ride";
 import { Offer } from "./pages/offer/offer";
-import {
-  RecoilRoot,
-} from 'recoil';
+import { RecoilRoot } from "recoil";
+import { MiddleWare } from "./pages/middleware/middleware";
 
 const routes = [
   {
-    path: "auth",
-    component: Login,
-    isExact: false,
-    private: true,
-  },
-  {
     path: "/",
     component: Home,
-    isExact: false,
-    private: true,
+    isExact: true,
   },
   {
     path: "ride",
     component: Ride,
-    isExact: false,
-    private: true,
+    isExact: true,
   },
   {
     path: "offer",
     component: Offer,
-    isExact: false,
-    private: true,
+    isExact: true,
   },
 ];
 
@@ -41,16 +31,19 @@ export const App = () => {
     <RecoilRoot>
       <Router>
         <Switch>
-          <Dashboard>
-            {routes.map((route) => (
-              <Route
-                key={route.path}
-                exact={route.isExact}
-                path={`/${route.path}`}
-                component={route.component}
-              />
-            ))}
-          </Dashboard>
+          <Route exact={false} path="/auth" component={Login} />
+          <MiddleWare>
+            <Dashboard>
+              {routes.map((route) => (
+                <Route
+                  key={route.path}
+                  exact={route.isExact}
+                  path={`/${route.path}`}
+                  component={route.component}
+                />
+              ))}
+            </Dashboard>
+          </MiddleWare>
         </Switch>
       </Router>
     </RecoilRoot>

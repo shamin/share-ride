@@ -16,12 +16,24 @@
             "name": "drivers",
             "type": {
               "vec": {
-                "defined": "Driver"
+                "defined": "Archive"
               }
             }
           },
           {
-            "name": "index",
+            "name": "rides",
+            "type": {
+              "vec": {
+                "defined": "Archive"
+              }
+            }
+          },
+          {
+            "name": "indexDrivers",
+            "type": "i32"
+          },
+          {
+            "name": "indexRides",
             "type": "i32"
           }
         ]
@@ -52,7 +64,25 @@
           {
             "name": "driver",
             "type": {
-              "defined": "Driver"
+              "defined": "Archive"
+            }
+          }
+        ]
+      },
+      {
+        "name": "addRide",
+        "accounts": [
+          {
+            "name": "authority",
+            "isMut": false,
+            "isSigner": true
+          }
+        ],
+        "args": [
+          {
+            "name": "driver",
+            "type": {
+              "defined": "Archive"
             }
           }
         ]
@@ -61,28 +91,12 @@
   },
   "types": [
     {
-      "name": "Driver",
+      "name": "Archive",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "address",
-            "type": "string"
-          },
-          {
-            "name": "location",
-            "type": "string"
-          },
-          {
-            "name": "date",
-            "type": "string"
-          },
-          {
-            "name": "seats",
-            "type": "u8"
-          },
-          {
-            "name": "cost",
+            "name": "archive",
             "type": "string"
           }
         ]
@@ -97,6 +111,6 @@
     }
   ],
   "metadata": {
-    "address": "AzPtkVC9ccTWdTwZw9vvnsFa94FmhDvy4UPtKvXP6s9M"
+    "address": "6tBqPhqWALi3R49tEbWwqPUYVhucWUPRWfmDxFPKp9Fo"
   }
 }

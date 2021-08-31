@@ -76,6 +76,7 @@ export const RidersModal: React.FC<RiderModalProps> = ({
   show,
   onClose,
 }) => {
+  console.log(drivers)
   return (
     <Dialog
       isShown={show}
@@ -87,19 +88,27 @@ export const RidersModal: React.FC<RiderModalProps> = ({
     >
       <Table.Body>
         <Table.Head>
-          <Table.TextCell flexBasis={200}>
-            Address
+          <Table.TextCell>
+            From
           </Table.TextCell>
+          <Table.TextCell>
+            To
+          </Table.TextCell>
+          <Table.TextCell>Total seats</Table.TextCell>
           <Table.TextCell>Cost per km</Table.TextCell>
           <Table.TextCell>Total Cost</Table.TextCell>
           <Table.TextCell>Action</Table.TextCell>
         </Table.Head>
         <Table.Body>
-          {drivers.map((d) => (
-            <Table.Row>
-              <Table.TextCell flexBasis={200}>
-                {d.address}
+          {drivers.map((d: any) => (
+            <Table.Row key={d.address}>
+              <Table.TextCell>
+                {d.fromAddress.address}
               </Table.TextCell>
+              <Table.TextCell>
+                {d.toAddress.address}
+              </Table.TextCell>
+              <Table.TextCell>{d.selectedSeats}</Table.TextCell>
               <Table.TextCell>{d.costPerKm}</Table.TextCell>
               <Table.TextCell>{d.costPerKm * distance * seatsRequired}</Table.TextCell>
               <Table.TextCell><Button onClick={() => onDriverClicked(d)} appearance="primary" intent="success">Accept</Button></Table.TextCell>

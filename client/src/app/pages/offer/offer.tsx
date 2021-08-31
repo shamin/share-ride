@@ -1,13 +1,22 @@
 import "./offer.scss";
 import { useState } from "react";
 import ReactMapGL, { Marker } from "react-map-gl";
-import { Select, Button, MapMarkerIcon, TextInput } from "evergreen-ui";
+import {
+  Select,
+  Button,
+  MapMarkerIcon,
+  TextInput,
+  CornerDialog,
+} from "evergreen-ui";
 //@ts-expect-error
 import AlgoliaPlaces from "algolia-places-react";
 import { PolylineOverlay } from "./PolyLineOverlay";
 import { useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useSharerideState } from "../../hooks/useSharerideState";
+import { getSolanaWallet } from "../../../web3/wallet";
+import { useHistory } from "react-router-dom";
 
 type Address = {
   address: string;
@@ -22,6 +31,22 @@ export const Offer = () => {
   const [costPerKm, setCostPerKm] = useState(0.1);
   const [routeJSON, setRouteJSON] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
+  const wallet = getSolanaWallet();
+  const walletKey = wallet?.publicKey?.toBase58();
+
+  const {
+    addDriver,
+    getDrivers,
+    loading,
+    showCompleteModal,
+    setShowCompleteModal,
+  } = useSharerideState();
+
+  const history = useHistory();
+
+  useEffect(() => {
+    getDrivers();
+  }, []);
 
   const getOptimizedRoute = () => {
     if (!fromAddress || !toAddress) {
@@ -51,10 +76,29 @@ export const Offer = () => {
 
   useEffect(() => {
     getOptimizedRoute();
-  }, [fromAddress, toAddress]);
+  }, [JSON.stringify(fromAddress), JSON.stringify(toAddress)]);
+
+  const driver = {
+    fromAddress,
+    toAddress,
+    selectedSeats,
+    costPerKm,
+    startDate,
+    walletKey,
+  };
 
   return (
     <div className="offer_map__view">
+      <CornerDialog
+        intent="success"
+        title="Ride Added"
+        isShown={showCompleteModal}
+        confirmLabel="Show Rides"
+        onConfirm={() => history.push('/')}
+        onCloseComplete={() => setShowCompleteModal(false)}
+      >
+        Hooray!, Your ride is successfully added
+      </CornerDialog>
       <div className="ride__selection">
         <div className="head">
           <h3>Offer a ride</h3>
@@ -121,9 +165,7 @@ export const Offer = () => {
               setSelectedSeats(parseInt(event.target.value, 10))
             }
           >
-            <option value="1">
-              1
-            </option>
+            <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
@@ -131,11 +173,14 @@ export const Offer = () => {
         </div>
         {
           <Button
+            isLoading={loading}
             disabled={
               !fromAddress || !toAddress || !selectedSeats || !costPerKm
             }
             className="find__ride"
-            onClick={() => {}}
+            onClick={() => {
+              addDriver(driver);
+            }}
           >
             Add Ride
           </Button>
