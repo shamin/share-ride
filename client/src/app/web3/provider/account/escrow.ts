@@ -1,24 +1,19 @@
 import { BN, Provider, utils } from "@project-serum/anchor";
 import { Keypair, PublicKey, SYSVAR_RENT_PUBKEY } from "@solana/web3.js";
-import { mintPublicKey } from "./mint";
-import { getTokenAccount } from "./tokenAccount";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import { TOKEN_PROGRAM_ID, AccountInfo } from "@solana/spl-token";
 import { loadEscrowProgram } from "../../program";
 
-export const intializeEscrow = async (provider: Provider) => {
+export const intializeEscrow = async (
+  provider: Provider,
+  tokenAccount: AccountInfo
+) => {
   // TODO: Move this to actual driver & fix passenger amount
-  const driver = Keypair.generate();
+  const driverPublicKey = "6KwDFRmHUJcwLJcqU6wFzX8ZZkDR4hgoo3QMbKpg5PwL";
   const passengerAmount = 20;
 
   const program = loadEscrowProgram(provider);
   console.log("Program loaded", program);
   const escrowAccount = Keypair.generate();
-
-  const tokenAccount = await getTokenAccount(
-    provider,
-    mintPublicKey,
-    new PublicKey("Fg8GVFCXnxiUo5Xjr2fMTsEN5HYaJN6SYCZWJJT6kYsK")
-  );
 
   await program.rpc.initializeEscrow(new BN(passengerAmount), {
     accounts: {
@@ -27,7 +22,7 @@ export const intializeEscrow = async (provider: Provider) => {
       escrowAccount: escrowAccount.publicKey,
       tokenProgram: TOKEN_PROGRAM_ID,
       rent: SYSVAR_RENT_PUBKEY,
-      driver: driver.publicKey,
+      driver: driverPublicKey,
     },
     instructions: [
       await program.account.escrowAccount.createInstruction(escrowAccount),
@@ -35,10 +30,15 @@ export const intializeEscrow = async (provider: Provider) => {
     signers: [escrowAccount],
   });
 
+  console.log(escrowAccount);
+  console.log(escrowAccount.publicKey.toString());
+
   const [pda, _nonce] = await PublicKey.findProgramAddress(
     [Buffer.from(utils.bytes.utf8.encode("escrow"))],
     program.programId
   );
+
+  console.log(pda, pda.toString())
 
   return pda;
 };
