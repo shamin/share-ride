@@ -1,9 +1,9 @@
 import { BN, Provider, utils } from "@project-serum/anchor";
 import { Keypair, PublicKey, SYSVAR_RENT_PUBKEY } from "@solana/web3.js";
 import { mintPublicKey } from "./mint";
-import { loadEscrowProgram } from "./program";
 import { getTokenAccount } from "./tokenAccount";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import { loadEscrowProgram } from "../../program";
 
 export const intializeEscrow = async (provider: Provider) => {
   // TODO: Move this to actual driver & fix passenger amount

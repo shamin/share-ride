@@ -2,13 +2,9 @@ import Arweave from "arweave";
 import { JWKInterface } from "arweave/node/lib/wallet";
 import TestWeave from "testweave-sdk";
 
-export type Driver = {
+export type ArweaveDriver = {
   archive: string;
 }
-
-// class ArweaveData {
-//   constructor(public message: string, public created_on: string) {}
-// }
 
 class ArweaveService {
   arweave: Arweave;
@@ -22,9 +18,9 @@ class ArweaveService {
       protocol: "http",
     });
 
-    TestWeave.init(this.arweave).then((testWeave) => {
+    TestWeave.init(this.arweave).then((testWeave: any) => {
       this.testWeave = testWeave;
-      this.walletKey = this.testWeave.rootJWK;
+      this.walletKey = this.testWeave?.rootJWK;
     });
   }
 
@@ -45,7 +41,7 @@ class ArweaveService {
     return transaction.id;
   }
 
-  async getData(drivers: Array<Driver>): Promise<Array<string>> {
+  async getData(drivers: Array<ArweaveDriver>): Promise<Array<string>> {
     return new Promise((resolve, reject) => {
       const arweaveData =drivers.map(async ({ archive }) => {
         const data =  await this.arweave.transactions.getData(
@@ -63,5 +59,4 @@ class ArweaveService {
   }
 }
 
-const arweaveService = new ArweaveService();
-export default arweaveService;
+export default ArweaveService;

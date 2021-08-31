@@ -1,6 +1,6 @@
 import EventEmitter from "eventemitter3";
 import { PublicKey, Transaction } from "@solana/web3.js";
-import { WalletAdapter } from "./types";
+import { SolanaWallet } from "./types";
 
 type PhantomEvent = "disconnect" | "connect";
 type PhantomRequestMethod =
@@ -22,7 +22,7 @@ interface PhantomProvider {
 }
 
 export class PhantomWalletAdapter extends EventEmitter
-  implements WalletAdapter {
+  implements SolanaWallet {
   _provider: PhantomProvider | undefined;
   constructor() {
     super();

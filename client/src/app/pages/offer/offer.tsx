@@ -1,5 +1,5 @@
 import "./offer.scss";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactMapGL, { Marker } from "react-map-gl";
 import {
   Select,
@@ -11,12 +11,11 @@ import {
 //@ts-expect-error
 import AlgoliaPlaces from "algolia-places-react";
 import { PolylineOverlay } from "./PolyLineOverlay";
-import { useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useSharerideState } from "../../hooks/useSharerideState";
-import { getSolanaWallet } from "../../../web3/wallet";
 import { useHistory } from "react-router-dom";
+import { useShareRide } from "../../web3/provider";
+import { config } from "../../../config";
 
 type Address = {
   address: string;
@@ -31,21 +30,22 @@ export const Offer = () => {
   const [costPerKm, setCostPerKm] = useState(0.1);
   const [routeJSON, setRouteJSON] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
-  const wallet = getSolanaWallet();
+
+  const { wallet, shareRideState } = useShareRide();
   const walletKey = wallet?.publicKey?.toBase58();
 
   const {
     addDriver,
-    getDrivers,
+    loadDrivers,
     loading,
     showCompleteModal,
     setShowCompleteModal,
-  } = useSharerideState();
+  } = shareRideState;
 
   const history = useHistory();
 
   useEffect(() => {
-    getDrivers();
+    loadDrivers();
   }, []);
 
   const getOptimizedRoute = () => {
@@ -54,7 +54,7 @@ export const Offer = () => {
     }
     const coordinates = `${fromAddress.longitude},${fromAddress.latitude};${toAddress.longitude},${toAddress.latitude}`;
     fetch(
-      `https://api.mapbox.com/optimized-trips/v1/mapbox/driving/${coordinates}?&overview=full&steps=true&geometries=geojson&source=first&access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
+      `https://api.mapbox.com/optimized-trips/v1/mapbox/driving/${coordinates}?&overview=full&steps=true&geometries=geojson&source=first&access_token=${config.MAPBOX_ACCESS_TOKEN}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -94,7 +94,7 @@ export const Offer = () => {
         title="Ride Added"
         isShown={showCompleteModal}
         confirmLabel="Show Rides"
-        onConfirm={() => history.push('/')}
+        onConfirm={() => history.push("/")}
         onCloseComplete={() => setShowCompleteModal(false)}
       >
         Hooray!, Your ride is successfully added
@@ -106,8 +106,8 @@ export const Offer = () => {
           <AlgoliaPlaces
             placeholder="From"
             options={{
-              appId: process.env.REACT_APP_APP_ID,
-              apiKey: process.env.REACT_APP_ALGOLIA_API,
+              appId: config.APP_ID,
+              apiKey: config.ALGOLIA_API,
               language: "sv",
             }}
             onChange={({ suggestion }: any) => {
@@ -127,8 +127,8 @@ export const Offer = () => {
           <AlgoliaPlaces
             placeholder="To"
             options={{
-              appId: process.env.REACT_APP_APP_ID,
-              apiKey: process.env.REACT_APP_ALGOLIA_API,
+              appId: config.APP_ID,
+              apiKey: config.ALGOLIA_API,
               language: "sv",
             }}
             onChange={({ suggestion }: any) =>
@@ -189,6 +189,7 @@ export const Offer = () => {
       <div className="map">
         <ReactMapGL
           {...viewport}
+          mapboxApiAccessToken={config.MAPBOX_ACCESS_TOKEN}
           onViewportChange={(nextViewport: any) => setViewport(nextViewport)}
           mapStyle="mapbox://styles/mapbox/streets-v11"
         >
