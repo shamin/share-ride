@@ -5,7 +5,7 @@ import { WalletAdapter } from "../types";
 // @ts-ignore
 import mintAccountJson from "./mint-account.json";
 
-const mintPublicKey = new PublicKey(
+export const mintPublicKey = new PublicKey(
   "G8i3di2WFBtYYgfksynQ2gL7pEqc68bYMSWcqAEuEjxF"
 );
 
@@ -57,7 +57,7 @@ export const createTokenAccount = async (
   return tokenAccount;
 };
 
-export const getTokenAccountBalance = async (
+export const getTokenAccount = (
   connection: Connection,
   payerAccount: Keypair
 ) => {
@@ -68,16 +68,14 @@ export const getTokenAccountBalance = async (
     payerAccount
   );
 
-  return (
-    await mint.getAccountInfo(new PublicKey(tempTokenAccount))
-  ).amount.toNumber();
+  return mint.getAccountInfo(new PublicKey(tempTokenAccount));
 };
 
 export const getWalletTokenAccountAndMintTo = async (
   connection: Connection,
   payerAccount: Keypair,
   amount: number
-): Promise<[PublicKey, Token]> => {
+): Promise<PublicKey> => {
   const mintAuthority = getMintAuthority();
 
   const mint = new Token(
@@ -111,5 +109,5 @@ export const getWalletTokenAccountAndMintTo = async (
     (await mint.getAccountInfo(new PublicKey(tokenAccount))).amount.toNumber()
   );
 
-  return [tokenAccount, mint];
+  return tokenAccount;
 };
