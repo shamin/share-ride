@@ -61,6 +61,7 @@ export const Ride = () => {
     )
       .then((response) => response.json())
       .then((data) => {
+        console.log("Data", data)
         if (data.trips.length > 0) {
           setRouteJSON(data.trips[0].geometry.coordinates);
           setRouteDistance(data.trips[0].distance / 1000);
@@ -197,6 +198,7 @@ export const Ride = () => {
       <div className="map">
         <ReactMapGL
           {...viewport}
+          mapboxApiAccessToken={config.MAPBOX_ACCESS_TOKEN}
           onViewportChange={(nextViewport: any) => setViewport(nextViewport)}
           mapStyle="mapbox://styles/mapbox/streets-v11"
         >

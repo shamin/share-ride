@@ -45,7 +45,7 @@ export const Offer = () => {
   const history = useHistory();
 
   useEffect(() => {
-    // loadDrivers();
+    loadDrivers();
   }, []);
 
   const getOptimizedRoute = () => {
@@ -189,6 +189,7 @@ export const Offer = () => {
       <div className="map">
         <ReactMapGL
           {...viewport}
+          mapboxApiAccessToken={config.MAPBOX_ACCESS_TOKEN}
           onViewportChange={(nextViewport: any) => setViewport(nextViewport)}
           mapStyle="mapbox://styles/mapbox/streets-v11"
         >

@@ -1,6 +1,6 @@
 import { Program, Provider, Idl } from "@project-serum/anchor";
 import shareRideIdl from "./idls/share_ride.json";
-import escrowIdl from "./idls/escrow-idl.json";
+import escrowIdl from "./idls/share_ride_escrow.json";
 
 const loadProgram = (provider: Provider, idl: any) => {
   console.log("Loading program", idl);

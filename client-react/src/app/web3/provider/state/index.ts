@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ShareRideModel } from "./model";
 import { Provider } from "@project-serum/anchor";
 
@@ -27,39 +27,49 @@ export const useShareRideState = (provider?: Provider): ShareRideState => {
   const [ridesLoading, setRidesLoading] = useState(false);
   const [showCompleteModal, setShowCompleteModal] = useState(false);
 
-  const shareRiderModel = useMemo(() => {
-    if(provider) {
-      return new ShareRideModel(provider)
+  const shareRideModelRef = useRef<ShareRideModel>();
+
+  const initializeShareRideModel = async (provider: Provider) => {
+    const _shareRideModel = new ShareRideModel(provider);
+    await _shareRideModel.initialize();
+    shareRideModelRef.current = _shareRideModel;
+  };
+
+  useEffect(() => {
+    if (provider && !shareRideModelRef.current) {
+      console.log("Initing share ride model")
+      initializeShareRideModel(provider);
     }
-  }, [provider])
+  }, [provider]);
 
   const loadDrivers = async () => {
-    if(!shareRiderModel) {
-      return
+    console.log("Loading drivers", shareRideModelRef.current);
+    if (!shareRideModelRef.current) {
+      return;
     }
     if (driversLoading) {
       return;
     }
     setDriversLoading(true);
     try {
-      const drivers = await shareRiderModel.getActiveDrivers();
+      const drivers = await shareRideModelRef.current.getActiveDrivers();
       setDrivers(drivers);
     } catch (err) {
-      console.log("Error loading drivers");
+      console.log("Error loading drivers", err);
     }
     setDriversLoading(false);
   };
 
   const loadRides = async () => {
-    if(!shareRiderModel) {
-      return
+    if (!shareRideModelRef.current) {
+      return;
     }
     if (ridesLoading) {
       return;
     }
     setRidesLoading(true);
     try {
-      const rides = await shareRiderModel.getActiveRides();
+      const rides = await shareRideModelRef.current.getActiveRides();
       setRides(rides);
     } catch (err) {
       console.log("Error loading drivers");
@@ -68,22 +78,22 @@ export const useShareRideState = (provider?: Provider): ShareRideState => {
   };
 
   const addDriver = async (driver: any) => {
-    if(!shareRiderModel) {
-      return
+    if (!shareRideModelRef.current) {
+      return;
     }
     setLoading(true);
-    await shareRiderModel.addDrivers(driver);
+    await shareRideModelRef.current.addDrivers(driver);
     await loadDrivers();
     setLoading(false);
     setShowCompleteModal(true);
   };
 
   const addRide = async (ride: any) => {
-    if(!shareRiderModel) {
-      return
+    if (!shareRideModelRef.current) {
+      return;
     }
     setLoading(true);
-    await shareRiderModel.addRides(ride);
+    await shareRideModelRef.current.addRides(ride);
     await loadRides();
     setLoading(false);
     setShowCompleteModal(true);
