@@ -6,9 +6,9 @@ import ShareRideProvider from "./web3/provider";
 import { Login } from "./pages/auth/login";
 import { Home } from "./pages/home/home";
 import { Dashboard } from "./pages/dashboard/dashboard";
-// import { Ride } from "./pages/ride/ride";
-// import { Offer } from "./pages/offer/offer";
 import { MiddleWare } from "./middleware";
+import { Ride } from "./pages/ride/ride";
+import { Offer } from "./pages/offer/offer";
 
 const routes = [
   {
@@ -16,16 +16,16 @@ const routes = [
     component: Home,
     isExact: true,
   },
-  // {
-  //   path: "ride",
-  //   component: Ride,
-  //   isExact: true,
-  // },
-  // {
-  //   path: "offer",
-  //   component: Offer,
-  //   isExact: true,
-  // },
+  {
+    path: "ride",
+    component: Ride,
+    isExact: true,
+  },
+  {
+    path: "offer",
+    component: Offer,
+    isExact: true,
+  },
   {
     path: "account",
     component: Account,

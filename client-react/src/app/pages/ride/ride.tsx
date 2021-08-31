@@ -8,10 +8,10 @@ import { PolylineOverlay } from "./PolyLineOverlay";
 import { RidersModal } from "./Riders";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useSharerideState } from "../../hooks/useSharerideState";
 import { findDrivers } from "./utils";
-import { getSolanaWallet } from "../../../web3/wallet";
 import { useHistory } from "react-router-dom";
+import { useShareRide } from "../../web3/provider";
+import { config } from "../../../config";
 
 const COST_PER_KM = 0.1;
 
@@ -30,23 +30,24 @@ export const Ride = () => {
   const [showDrivers, setShowDrivers] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [matchingDivers, setMatchingDrivers] = useState([]);
-  const wallet = getSolanaWallet();
+  
+  const { wallet, shareRideState } = useShareRide();
   const walletKey = wallet?.publicKey?.toBase58();
 
   const {
     drivers,
-    getDrivers,
-    getRides,
+    loadDrivers,
+    loadRides,
     addRide,
     loading,
     setShowCompleteModal,
     showCompleteModal,
-  } = useSharerideState();
+  } = shareRideState;
 
-  useEffect(() => {
-    getDrivers();
-    getRides();
-  }, []);
+  // useEffect(() => {
+  //   loadDrivers();
+  //   loadRides();
+  // }, []);
 
   const history = useHistory();
 
@@ -56,7 +57,7 @@ export const Ride = () => {
     }
     const coordinates = `${fromAddress.longitude},${fromAddress.latitude};${toAddress.longitude},${toAddress.latitude}`;
     fetch(
-      `https://api.mapbox.com/optimized-trips/v1/mapbox/driving/${coordinates}?&overview=full&steps=true&geometries=geojson&source=first&access_token=${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`
+      `https://api.mapbox.com/optimized-trips/v1/mapbox/driving/${coordinates}?&overview=full&steps=true&geometries=geojson&source=first&access_token=${config.MAPBOX_ACCESS_TOKEN}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -122,8 +123,8 @@ export const Ride = () => {
           <AlgoliaPlaces
             placeholder="From"
             options={{
-              appId: process.env.REACT_APP_APP_ID,
-              apiKey: process.env.REACT_APP_ALGOLIA_API,
+              appId: config.APP_ID,
+              apiKey: config.ALGOLIA_API,
               language: "sv",
             }}
             onChange={({ suggestion }: any) => {
@@ -143,8 +144,8 @@ export const Ride = () => {
           <AlgoliaPlaces
             placeholder="To"
             options={{
-              appId: process.env.REACT_APP_APP_ID,
-              apiKey: process.env.REACT_APP_ALGOLIA_API,
+              appId: config.APP_ID,
+              apiKey: config.ALGOLIA_API,
               language: "sv",
             }}
             onChange={({ suggestion }: any) =>
