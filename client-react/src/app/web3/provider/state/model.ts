@@ -33,7 +33,10 @@ export class ShareRideModel {
       await this.getAllDrivers();
     } catch (err) {
       console.log("Error getting drivers", err);
-      console.log("Initializing new state", this.provider.wallet.publicKey.toString())
+      console.log(
+        "Initializing new state",
+        this.provider.wallet.publicKey.toString()
+      );
       await this.program.state.rpc.new({
         accounts: {
           authority: this.provider.wallet.publicKey,
@@ -78,8 +81,8 @@ export class ShareRideModel {
           authority: this.provider.wallet.publicKey,
         },
       });
-    } catch {
-      console.log("Error while adding driver");
+    } catch (err) {
+      console.log("Error while adding driver", err);
     }
   }
 

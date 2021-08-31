@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Button } from "evergreen-ui";
 import { useHistory } from "react-router-dom";
 import "./home.scss";
-// import { useSharerideState } from "../../hooks/useSharerideState";
-// import { getSolanaWallet, initializeWallet } from "../../../web3/wallet";
+import { useShareRide } from "../../web3/provider";
 
 const formatDate = (d: Date) => {
   let dd: string | number = d.getDate();
@@ -55,67 +54,43 @@ const ridesData = [
 ];
 
 export const Home = () => {
-  // const wallet = getSolanaWallet();
-  // const [myUpcomingRides, setMyUpcomingRides] = useState([]);
-  // const [myRideOffers, setMyRideOffers] = useState([]);
-  // const walletKey = wallet?.publicKey?.toBase58();
-  // const { drivers, getRides, rides = [], getDrivers } = useSharerideState();
+  const { wallet, shareRideState } = useShareRide();
+  const walletKey = wallet?.publicKey?.toBase58();
+  console.log("Home", shareRideState.drivers);
 
-  // useEffect(() => {
-  //   if (walletKey) {
-  //     getDrivers();
-  //     getRides();
-  //   }
-  // }, [walletKey]);
+  useEffect(() => {
+    if (wallet) {
+      shareRideState.loadDrivers();
+    }
+  }, [wallet]);
 
-  // console.log(rides, drivers);
+  const myUpcomingRides = shareRideState.rides
+    .filter(({ riderKey }: any) => riderKey === walletKey)
+    .map(
+      ({ fromAddress, toAddress, startDate, driver }: any, index: number) => ({
+        id: index,
+        from: fromAddress.address,
+        to: toAddress.address,
+        date: formatDate(new Date(startDate)),
+        driver,
+      })
+    );
 
-  // useEffect(() => {
-  //   if (!rides.length) {
-  //     return;
-  //   }
-  //   console.log(rides);
-  //   console.log(walletKey);
-  //   const filteredRides = rides
-  //     .filter(({ riderKey }: any) => riderKey === walletKey)
-  //     .map(
-  //       (
-  //         { fromAddress, toAddress, startDate, driver }: any,
-  //         index: number
-  //       ) => ({
-  //         id: index,
-  //         from: fromAddress.address,
-  //         to: toAddress.address,
-  //         date: formatDate(new Date(startDate)),
-  //         driver,
-  //       })
-  //     );
-  //   console.log(filteredRides);
-  //   setMyUpcomingRides(filteredRides);
-  // }, [rides.length, walletKey]);
-
-  // useEffect(() => {
-  //   if (!drivers.length) {
-  //     return;
-  //   }
-  //   setMyRideOffers(
-  //     drivers
-  //       .filter(({ walletKey: w }: any) => w === walletKey)
-  //       .map(
-  //         (
-  //           { fromAddress, toAddress, startDate, selectedSeats }: any,
-  //           index: number
-  //         ) => ({
-  //           id: index,
-  //           from: fromAddress.address,
-  //           to: toAddress.address,
-  //           seatsOffered: selectedSeats,
-  //           date: formatDate(new Date(startDate)),
-  //           riders: rides.map((r: any) => r.driverKey === walletKey),
-  //         })
-  //       )
-  //   );
-  // }, [drivers.length, walletKey]);
+  const myRideOffers = shareRideState.drivers
+    .filter(({ walletKey: w }: any) => w === walletKey)
+    .map(
+      (
+        { fromAddress, toAddress, startDate, selectedSeats }: any,
+        index: number
+      ) => ({
+        id: index,
+        from: fromAddress.address,
+        to: toAddress.address,
+        seatsOffered: selectedSeats,
+        date: formatDate(new Date(startDate)),
+        riders: shareRideState.rides.map((r: any) => r.driverKey === walletKey),
+      })
+    );
 
   const history = useHistory();
   return (
@@ -128,7 +103,7 @@ export const Home = () => {
         )}
       </div> */}
       <div className="upcoming__rides">
-        {/* {myUpcomingRides.length > 0 && (
+        {myUpcomingRides.length > 0 && (
           <>
             <h3>Upcoming Rides</h3>
             <Table>
@@ -150,8 +125,8 @@ export const Home = () => {
               </Table.Body>
             </Table>
           </>
-        )} */}
-        {/* {myRideOffers.length > 0 && (
+        )}
+        {myRideOffers.length > 0 && (
           <>
             <h3>Upcoming Ride Offers</h3>
             <Table>
@@ -190,7 +165,7 @@ export const Home = () => {
               </Table.Body>
             </Table>
           </>
-        )} */}
+        )}
       </div>
       <div>
         <h3>Get Started</h3>

@@ -35,12 +35,11 @@ const routes = [
 
 export const App = () => {
   return (
-    // <RecoilRoot>
-    <Router>
-      <Switch>
-        <Route exact={false} path="/auth" component={Login} />
-        <MiddleWare>
-          <ShareRideProvider>
+    <ShareRideProvider>
+      <Router>
+        <Switch>
+          <Route exact={false} path="/auth" component={Login} />
+          <MiddleWare>
             <Dashboard>
               {routes.map((route) => (
                 <Route
@@ -51,23 +50,11 @@ export const App = () => {
                 />
               ))}
             </Dashboard>
-          </ShareRideProvider>
-        </MiddleWare>
-      </Switch>
-    </Router>
-    // </RecoilRoot>
+          </MiddleWare>
+        </Switch>
+      </Router>
+    </ShareRideProvider>
   );
 };
-
-
-
-
-// const App = () => {
-//   return (
-//     <ShareRideProvider>
-//       <Account />
-//     </ShareRideProvider>
-//   );
-// };
 
 export default App;

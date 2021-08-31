@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
-// import { getSolanaWallet, initializeWallet } from "../../../web3/wallet";
+import { useShareRide } from "./web3/provider";
+import { useHistory } from "react-router-dom";
 
 export const MiddleWare: React.FC = ({ children }) => {
-  // const wallet = getSolanaWallet();
+  const history = useHistory();
+  const { wallet } = useShareRide();
   useEffect(() => {
-    // if (!wallet) {
-    // initializeWallet();
-    // }
+    if (!wallet) {
+      history.push("/auth");
+    }
   }, []);
 
   return <>{children}</>;
