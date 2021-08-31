@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import React, { FunctionComponent } from "react";
 import "./sidebar.scss";
 import Logo from "../../../../assets/images/logo-white.png";
 import { useHistory } from "react-router-dom";
@@ -9,6 +9,7 @@ import {
   NewLinkIcon,
   PathSearchIcon,
   Tooltip,
+  BankAccountIcon,
 } from "evergreen-ui";
 
 interface SideBarProps {}
@@ -49,14 +50,23 @@ export const SideBar: FunctionComponent<SideBarProps> = () => {
                 onClick={() => history.push("/offer")}
               />
             </Tooltip>
+            <Tooltip position="right" content="Account">
+              <IconButton
+                className="icon__button"
+                appearance="minimal"
+                height={50}
+                icon={BankAccountIcon}
+                onClick={() => history.push("/account")}
+              />
+            </Tooltip>
           </div>
         </div>
-        <IconButton
+        {/* <IconButton
           className="icon__button"
           appearance="minimal"
           height={50}
           icon={LogOutIcon}
-        />
+        /> */}
       </nav>
     </div>
   );

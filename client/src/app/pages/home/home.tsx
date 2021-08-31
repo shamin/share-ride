@@ -1,10 +1,8 @@
-import "./home.scss";
+import React, { useEffect, useState } from "react";
 import { Table, Button } from "evergreen-ui";
 import { useHistory } from "react-router-dom";
-import { useSharerideState } from "../../hooks/useSharerideState";
-import { useEffect } from "react";
-import { getSolanaWallet, initializeWallet } from "../../../web3/wallet";
-import { useState } from "react";
+import "./home.scss";
+import { useShareRide } from "../../web3/provider";
 
 const formatDate = (d: Date) => {
   let dd: string | number = d.getDate();
@@ -56,78 +54,54 @@ const ridesData = [
 ];
 
 export const Home = () => {
-  const wallet = getSolanaWallet();
-  const [myUpcomingRides, setMyUpcomingRides] = useState([]);
-  const [myRideOffers, setMyRideOffers] = useState([]);
+  const { wallet, shareRideState } = useShareRide();
   const walletKey = wallet?.publicKey?.toBase58();
-  const { drivers, getRides, rides = [], getDrivers } = useSharerideState();
+  console.log("Home", shareRideState.drivers);
 
   useEffect(() => {
-    if (walletKey) {
-      getDrivers();
-      getRides();
+    if (wallet) {
+      shareRideState.loadDrivers();
     }
-  }, [walletKey]);
+  }, [wallet]);
 
-  console.log(rides, drivers);
-
-  useEffect(() => {
-    if (!rides.length) {
-      return;
-    }
-    console.log(rides);
-    console.log(walletKey);
-    const filteredRides = rides
-      .filter(({ riderKey }: any) => riderKey === walletKey)
-      .map(
-        (
-          { fromAddress, toAddress, startDate, driver }: any,
-          index: number
-        ) => ({
-          id: index,
-          from: fromAddress.address,
-          to: toAddress.address,
-          date: formatDate(new Date(startDate)),
-          driver,
-        })
-      );
-    console.log(filteredRides);
-    setMyUpcomingRides(filteredRides);
-  }, [rides.length, walletKey]);
-
-  useEffect(() => {
-    if (!drivers.length) {
-      return;
-    }
-    setMyRideOffers(
-      drivers
-        .filter(({ walletKey: w }: any) => w === walletKey)
-        .map(
-          (
-            { fromAddress, toAddress, startDate, selectedSeats }: any,
-            index: number
-          ) => ({
-            id: index,
-            from: fromAddress.address,
-            to: toAddress.address,
-            seatsOffered: selectedSeats,
-            date: formatDate(new Date(startDate)),
-            riders: rides.map((r: any) => r.driverKey === walletKey),
-          })
-        )
+  const myUpcomingRides = shareRideState.rides
+    .filter(({ riderKey }: any) => riderKey === walletKey)
+    .map(
+      ({ fromAddress, toAddress, startDate, driver }: any, index: number) => ({
+        id: index,
+        from: fromAddress.address,
+        to: toAddress.address,
+        date: formatDate(new Date(startDate)),
+        driver,
+      })
     );
-  }, [drivers.length, walletKey]);
+
+  const myRideOffers = shareRideState.drivers
+    .filter(({ walletKey: w }: any) => w === walletKey)
+    .map(
+      (
+        { fromAddress, toAddress, startDate, selectedSeats }: any,
+        index: number
+      ) => ({
+        id: index,
+        from: fromAddress.address,
+        to: toAddress.address,
+        seatsOffered: selectedSeats,
+        date: formatDate(new Date(startDate)),
+        riders: shareRideState.rides.map((r: any) => r.driverKey === walletKey),
+      })
+    );
 
   const history = useHistory();
   return (
     <div className="container__home">
-      <div className="topBar">
+      {/* <div className="topBar">
         {wallet ? (
           <div>Balance:</div>
         ) : (
           <Button onClick={() => initializeWallet()}>Connect Wallet</Button>
         )}
-      </div>
+      </div> */}
       <div className="upcoming__rides">
         {myUpcomingRides.length > 0 && (
           <>

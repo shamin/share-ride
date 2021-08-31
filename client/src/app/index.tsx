@@ -1,12 +1,14 @@
+import React, { useState } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Account from "./pages/account/account";
+import ShareRideProvider from "./web3/provider";
+
 import { Login } from "./pages/auth/login";
-import "./index.scss";
-import { Dashboard } from "./pages/dashboard/dashboard";
 import { Home } from "./pages/home/home";
+import { Dashboard } from "./pages/dashboard/dashboard";
+import { MiddleWare } from "./middleware";
 import { Ride } from "./pages/ride/ride";
 import { Offer } from "./pages/offer/offer";
-import { RecoilRoot } from "recoil";
-import { MiddleWare } from "./pages/middleware/middleware";
 
 const routes = [
   {
@@ -24,11 +26,16 @@ const routes = [
     component: Offer,
     isExact: true,
   },
+  {
+    path: "account",
+    component: Account,
+    isExact: true,
+  },
 ];
 
 export const App = () => {
   return (
-    <RecoilRoot>
+    <ShareRideProvider>
       <Router>
         <Switch>
           <Route exact={false} path="/auth" component={Login} />
@@ -46,6 +53,8 @@ export const App = () => {
           </MiddleWare>
         </Switch>
       </Router>
-    </RecoilRoot>
+    </ShareRideProvider>
   );
 };
+
+export default App;

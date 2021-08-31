@@ -4,4 +4,12 @@
   margin: 0 auto;
   padding-left: 64px;
   box-sizing: border-box;
+  flex-direction: column;
+}
+
+.main .topBar {
+  border-bottom: 1px solid #ccc;
+  padding: 20px;
+  display: flex;
+  justify-content: flex-end;
 }
