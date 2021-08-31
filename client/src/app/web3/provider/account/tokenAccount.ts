@@ -93,7 +93,8 @@ export async function mintToTokenAccount(
   provider: Provider,
   mint: PublicKey,
   mintAuthority: Keypair,
-  tokenAccount: PublicKey
+  tokenAccount: PublicKey,
+  amount: number
 ) {
   const tx = new Transaction();
   tx.feePayer = provider.wallet!.publicKey!;
@@ -103,7 +104,7 @@ export async function mintToTokenAccount(
     TokenInstructions.mintTo({
       mint,
       destination: tokenAccount,
-      amount: 100,
+      amount,
       mintAuthority: mintAuthority.publicKey,
     })
   );

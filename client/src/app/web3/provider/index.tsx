@@ -1,13 +1,19 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useCallback } from "react";
 import { SolanaWallet } from "./wallet/types";
 import { connectWallet } from "./wallet";
 import { Connection, PublicKey } from "@solana/web3.js";
-import { Provider as SolanaProvider } from "@project-serum/anchor";
+import { Provider, Provider as SolanaProvider } from "@project-serum/anchor";
 import { ShareRideState, useShareRideState } from "./state";
-import { getTokenAccount } from "./account/tokenAccount";
-import { mintPublicKey } from "./account/mint";
 import { AccountInfo } from "@solana/spl-token";
+import { exchangeEscrow, intializeEscrow } from "./account/escrow";
+import { useTokenAccount } from "./account";
 
 enum SolanaNetworks {
   DEV = "https://api.devnet.solana.com",
@@ -21,6 +27,9 @@ interface ShareRideProviderContextType {
   loadWallet: () => Promise<void>;
   shareRideState: ShareRideState;
   tokenAccount?: AccountInfo;
+  intializeEscrow: () => Promise<PublicKey> | undefined;
+  exchangeEscrow: () => Promise<void> | undefined;
+  mintAmountToTokenAccount: (amount: number) => Promise<void>
 }
 
 const ShareRideProviderContext = createContext<ShareRideProviderContextType>(
@@ -38,7 +47,10 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
 }: ShareRideProviderProviderProps) => {
   const [wallet, setWallet] = useState<SolanaWallet>();
   const [provider, setProvider] = useState<SolanaProvider>();
-  const [tokenAccount, setTokenAccount] = useState<AccountInfo>();
+  // const [tokenAccount, setTokenAccount] = useState<AccountInfo>();
+  const { tokenAccount, loadTokenAccount, mintAmountToTokenAccount } = useTokenAccount(
+    provider as Provider
+  );
 
   const loadWallet = useCallback(async () => {
     const _wallet = await connectWallet();
@@ -49,19 +61,28 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
       {}
     );
     setProvider(provider);
-
-    const tokenAcc = await getTokenAccount(
-      provider,
-      mintPublicKey,
-      new PublicKey("Fg8GVFCXnxiUo5Xjr2fMTsEN5HYaJN6SYCZWJJT6kYsK") // TODO: Change and retrive this
-    );
-    setTokenAccount(tokenAcc);
-    console.log(tokenAcc.amount.toNumber());
-
     console.log("Set wallet");
   }, []);
 
+  useEffect(() => {
+    if (provider && !tokenAccount) {
+      loadTokenAccount();
+    }
+  }, [provider]);
+
   const shareRideState = useShareRideState(provider);
+
+  const _intializeEscrow = () => {
+    if (provider && tokenAccount) {
+      return intializeEscrow(provider, tokenAccount);
+    }
+  };
+
+  const _exchangeEscrow = () => {
+    if (provider && tokenAccount) {
+      return exchangeEscrow(provider, tokenAccount);
+    }
+  };
 
   const value = useMemo<ShareRideProviderContextType>(
     () => ({
@@ -69,8 +90,11 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
       loadWallet,
       shareRideState,
       tokenAccount,
+      intializeEscrow: _intializeEscrow,
+      exchangeEscrow: _exchangeEscrow,
+      mintAmountToTokenAccount,
     }),
-    [wallet, shareRideState, tokenAccount]
+    [wallet, shareRideState, tokenAccount, provider]
   );
 
   return (
