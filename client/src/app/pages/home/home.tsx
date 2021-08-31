@@ -95,13 +95,25 @@ export const Home = () => {
   const history = useHistory();
   return (
     <div className="container__home">
-      {/* <div className="topBar">
-        {wallet ? (
-          <div>Balance:</div>
-        ) : (
-          <Button onClick={() => initializeWallet()}>Connect Wallet</Button>
-        )}
-      </div> */}
+      <div>
+        <h3>Get Started</h3>
+        <div className="get__started">
+          <div
+            onClick={() => history.push("/ride")}
+            className="find__ride driver__card"
+          >
+            <div className="overlay" />
+            <p>Find a ride</p>
+          </div>
+          <div
+            onClick={() => history.push("/offer")}
+            className="offer__ride driver__card"
+          >
+            <div className="overlay" />
+            <p>Offer a ride</p>
+          </div>
+        </div>
+      </div>
       <div className="upcoming__rides">
         {myUpcomingRides.length > 0 && (
           <>
@@ -166,15 +178,6 @@ export const Home = () => {
             </Table>
           </>
         )}
-      </div>
-      <div>
-        <h3>Get Started</h3>
-        <Button onClick={() => history.push("/ride")} className="finde__ride">
-          Find ride
-        </Button>
-        <Button onClick={() => history.push("/offer")} className="offer__ride">
-          Offer ride
-        </Button>
       </div>
     </div>
   );

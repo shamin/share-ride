@@ -8,8 +8,84 @@
 }
 
 .main .topBar {
-  border-bottom: 1px solid #ccc;
-  padding: 20px;
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px;
+  padding: 10px 20px;
   display: flex;
   justify-content: flex-end;
+  p {
+    margin: 0;
+    color: #1f1f1f;
+    .token__name {
+      color: #687173;
+      font-size: 14px;
+      text-transform: lowercase;
+    }
+    .token__balance {
+      font-weight: bold;
+      color: #687173;
+      font-size: 16px;
+      text-transform: lowercase;
+    }
+    .token__heading {
+      font-weight: bold;
+      font-size: 16px;
+      padding-bottom: 2px;
+    }
+  }
+}
+
+.card {
+  background-color: #eef7fe;
+  padding: 15px;
+  width: 200px;
+  display: flex;
+  border-radius: 40px;
+
+  @media screen and (max-width: 355px) {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  gap: 30px;
+  align-items: center;
+
+  &__icon {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background-color: #11bf5a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: shadow 1s infinite alternate;
+    flex-shrink: 0;
+  }
+
+  &__info {
+    &-price {
+      font-size: 16px;
+      font-weight: 600;
+
+      &__icon {
+        cursor: pointer;
+      }
+    }
+
+    &-note {
+      font-size: 12px;
+      margin-top: 10px;
+      text-transform: uppercase;
+
+      &__price {
+        color: #f63f45;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+@keyframes shadow {
+  to {
+    box-shadow: 0 0 0 10px #23c7676b;
+  }
 }
