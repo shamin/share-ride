@@ -38,7 +38,50 @@ export const intializeEscrow = async (
     program.programId
   );
 
-  console.log(pda, pda.toString())
+  console.log(pda, pda.toString());
 
   return pda;
+};
+
+export const getEscrowAccount = (
+  provider: Provider,
+  escrowAccPublicKey: string
+) => {
+  const program = loadEscrowProgram(provider);
+  return program.account.escrowAccount.fetch(escrowAccPublicKey);
+};
+
+export const exchangeEscrow = async (
+  provider: Provider,
+  tokenAccount: AccountInfo
+) => {
+  const escrow = "BZVtnS93wkF5PRNTkp6Se4dnK8sr7sj2LAgXNntrBj9r";
+  const program = loadEscrowProgram(provider);
+
+  console.log("Loading escrow account");
+  const escrowAccount = (await getEscrowAccount(provider, escrow)) as any;
+  console.log(escrowAccount);
+  console.log({
+    driver: provider.wallet.publicKey,
+    driverReceiveTokenAccount: tokenAccount.address,
+    passengerMainAccount: escrowAccount.passengerKey,
+    pdaAccount: "6eVFEduLkLoLMJ3ASaKndirfKJHL4rtNqHvUwRC2Ph3G",
+    pdaDepositTokenAccount: escrowAccount.passengerDepositTokenAccount,
+    tokenProgram: TOKEN_PROGRAM_ID,
+    escrowAccount: escrow,
+  });
+
+  await program.rpc.exchange({
+    accounts: {
+      driver: provider.wallet.publicKey,
+      driverReceiveTokenAccount: tokenAccount.address,
+      passengerMainAccount: escrowAccount.passengerKey,
+      pdaAccount: "6eVFEduLkLoLMJ3ASaKndirfKJHL4rtNqHvUwRC2Ph3G",
+      pdaDepositTokenAccount:escrowAccount.passengerDepositTokenAccount,
+      tokenProgram: TOKEN_PROGRAM_ID,
+      escrowAccount: escrow,
+    },
+  });
+
+  console.log("Token exchange complete");
 };

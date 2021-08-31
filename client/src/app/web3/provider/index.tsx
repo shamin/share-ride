@@ -12,7 +12,7 @@ import { Connection, PublicKey } from "@solana/web3.js";
 import { Provider, Provider as SolanaProvider } from "@project-serum/anchor";
 import { ShareRideState, useShareRideState } from "./state";
 import { AccountInfo } from "@solana/spl-token";
-import { intializeEscrow } from "./account/escrow";
+import { exchangeEscrow, intializeEscrow } from "./account/escrow";
 import { useTokenAccount } from "./account";
 
 enum SolanaNetworks {
@@ -28,6 +28,7 @@ interface ShareRideProviderContextType {
   shareRideState: ShareRideState;
   tokenAccount?: AccountInfo;
   intializeEscrow: () => Promise<PublicKey> | undefined;
+  exchangeEscrow: () => Promise<void> | undefined;
   mintAmountToTokenAccount: (amount: number) => Promise<void>
 }
 
@@ -77,6 +78,12 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
     }
   };
 
+  const _exchangeEscrow = () => {
+    if (provider && tokenAccount) {
+      return exchangeEscrow(provider, tokenAccount);
+    }
+  };
+
   const value = useMemo<ShareRideProviderContextType>(
     () => ({
       wallet,
@@ -84,6 +91,7 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
       shareRideState,
       tokenAccount,
       intializeEscrow: _intializeEscrow,
+      exchangeEscrow: _exchangeEscrow,
       mintAmountToTokenAccount,
     }),
     [wallet, shareRideState, tokenAccount, provider]

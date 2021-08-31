@@ -11,6 +11,7 @@ const Account: React.FC<AccountProps> = (props: AccountProps) => {
     wallet,
     tokenAccount,
     intializeEscrow,
+    exchangeEscrow,
     mintAmountToTokenAccount,
   } = useShareRide();
   const [amount, setAmount] = useState("");
@@ -27,6 +28,10 @@ const Account: React.FC<AccountProps> = (props: AccountProps) => {
 
   const transactToken = async () => {
     const token = await intializeEscrow();
+  };
+
+  const creditToken = async () => {
+    const token = await exchangeEscrow();
   };
 
   const mintToken = async () => {
@@ -61,6 +66,9 @@ const Account: React.FC<AccountProps> = (props: AccountProps) => {
       </div>
       <div>
         <Button marginTop={20} onClick={() => transactToken()}>Transact Token</Button>
+      </div>
+      <div>
+        <Button marginTop={20} onClick={() => creditToken()}>Credit Token</Button>
       </div>
     </div>
   );
