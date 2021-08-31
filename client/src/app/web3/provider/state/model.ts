@@ -119,7 +119,7 @@ export class ShareRideModel {
         },
       });
     } catch {
-      console.log("Error while adding driver");
+      console.log("Error while adding ride");
     }
   }
 }
