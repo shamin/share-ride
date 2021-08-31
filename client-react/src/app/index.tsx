@@ -1,38 +1,73 @@
 import React, { useState } from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Account from "./pages/account/account";
 import ShareRideProvider from "./web3/provider";
 
-// const Data = () => {
-//   const { loadWallet, wallet } = useShareRide();
+import { Login } from "./pages/auth/login";
+import { Home } from "./pages/home/home";
+import { Dashboard } from "./pages/dashboard/dashboard";
+// import { Ride } from "./pages/ride/ride";
+// import { Offer } from "./pages/offer/offer";
+import { MiddleWare } from "./middleware";
 
-//   const initializeWallet = () => {
-//     loadWallet()
-//       .then(() => {
-//         console.log("Complete");
-//       })
-//       .catch((err) => {
-//         console.log(err);
-//       });
-//   };
+const routes = [
+  {
+    path: "/",
+    component: Home,
+    isExact: true,
+  },
+  // {
+  //   path: "ride",
+  //   component: Ride,
+  //   isExact: true,
+  // },
+  // {
+  //   path: "offer",
+  //   component: Offer,
+  //   isExact: true,
+  // },
+  {
+    path: "account",
+    component: Account,
+    isExact: true,
+  },
+];
 
-//   return (
-//     <div className="container__account">
-//       <h1>Account</h1>
-//       {wallet ? (
-//         <div>Balance:</div>
-//       ) : (
-//         <button onClick={() => initializeWallet()}>Connect Wallet</button>
-//       )}
-//     </div>
-//   );
-// };
-
-const App = () => {
+export const App = () => {
   return (
-    <ShareRideProvider>
-      <Account />
-    </ShareRideProvider>
+    // <RecoilRoot>
+    <Router>
+      <Switch>
+        <Route exact={false} path="/auth" component={Login} />
+        <MiddleWare>
+          <ShareRideProvider>
+            <Dashboard>
+              {routes.map((route) => (
+                <Route
+                  key={route.path}
+                  exact={route.isExact}
+                  path={`/${route.path}`}
+                  component={route.component}
+                />
+              ))}
+            </Dashboard>
+          </ShareRideProvider>
+        </MiddleWare>
+      </Switch>
+    </Router>
+    // </RecoilRoot>
   );
 };
+
+
+
+
+// const App = () => {
+//   return (
+//     <ShareRideProvider>
+//       <Account />
+//     </ShareRideProvider>
+//   );
+// };
 
 export default App;

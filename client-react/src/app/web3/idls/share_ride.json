@@ -1,0 +1,116 @@
+{
+  "version": "0.0.0",
+  "name": "share_ride",
+  "instructions": [],
+  "state": {
+    "struct": {
+      "name": "ShareRideState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "drivers",
+            "type": {
+              "vec": {
+                "defined": "Archive"
+              }
+            }
+          },
+          {
+            "name": "rides",
+            "type": {
+              "vec": {
+                "defined": "Archive"
+              }
+            }
+          },
+          {
+            "name": "indexDrivers",
+            "type": "i32"
+          },
+          {
+            "name": "indexRides",
+            "type": "i32"
+          }
+        ]
+      }
+    },
+    "methods": [
+      {
+        "name": "new",
+        "accounts": [
+          {
+            "name": "authority",
+            "isMut": false,
+            "isSigner": true
+          }
+        ],
+        "args": []
+      },
+      {
+        "name": "addDriver",
+        "accounts": [
+          {
+            "name": "authority",
+            "isMut": false,
+            "isSigner": true
+          }
+        ],
+        "args": [
+          {
+            "name": "driver",
+            "type": {
+              "defined": "Archive"
+            }
+          }
+        ]
+      },
+      {
+        "name": "addRide",
+        "accounts": [
+          {
+            "name": "authority",
+            "isMut": false,
+            "isSigner": true
+          }
+        ],
+        "args": [
+          {
+            "name": "driver",
+            "type": {
+              "defined": "Archive"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "types": [
+    {
+      "name": "Archive",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "archive",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 300,
+      "name": "Unauthorized",
+      "msg": "You are not authorized to perform this action."
+    }
+  ],
+  "metadata": {
+    "address": "6tBqPhqWALi3R49tEbWwqPUYVhucWUPRWfmDxFPKp9Fo"
+  }
+}
