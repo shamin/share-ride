@@ -33,7 +33,7 @@ class ArweaveService {
     // transaction.addTag("Content-Type", "text/plain");
     await this.arweave.transactions.sign(transaction, this.walletKey!);
     await this.arweave.transactions.post(transaction);
-    console.log("posted transaction");
+    console.log("posted transaction", transaction);
     await this.testWeave!.mine(); // need this to force immediate mine of related block
     console.log("forced mine");
     const status = await this.arweave.transactions.getStatus(transaction.id);

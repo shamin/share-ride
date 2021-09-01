@@ -112,6 +112,7 @@ export class ShareRideModel {
       ({ archive }: any) => archive !== DUMMY_TX_ID
     );
     const ridesData = await this.arweaveService.getData(filteredRides);
+    console.log("Rides data", ridesData)
     return ridesData;
   }
 

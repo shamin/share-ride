@@ -54,7 +54,7 @@ const ridesData = [
 ];
 
 export const Home = () => {
-  const { wallet, shareRideState } = useShareRide();
+  const { wallet, shareRideState, completeRide } = useShareRide();
   const walletKey = wallet?.publicKey?.toBase58();
   console.log("Home", shareRideState.drivers);
 
@@ -164,7 +164,9 @@ export const Home = () => {
                     </Table.TextCell>
                     <Table.TextCell>
                       <Button
-                        onClick={() => {}}
+                        onClick={() => { 
+                          completeRide(ride.id)
+                        }}
                         appearance="primary"
                         disabled={formatDate(new Date()) !== ride.date}
                         intent="success"

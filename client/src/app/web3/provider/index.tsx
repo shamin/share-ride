@@ -27,10 +27,11 @@ interface ShareRideProviderContextType {
   loadWallet: () => Promise<void>;
   shareRideState: ShareRideState;
   tokenAccount?: AccountInfo;
-  intializeEscrow: () => Promise<PublicKey> | undefined;
-  exchangeEscrow: () => Promise<void> | undefined;
+  intializeEscrow: any;
+  exchangeEscrow: () => void;
   mintAmountToTokenAccount: (amount: number) => Promise<void>;
   loadingText: string;
+  completeRide: (rideId: string) => Promise<void>;
 }
 
 const ShareRideProviderContext = createContext<ShareRideProviderContextType>(
@@ -47,7 +48,7 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
   children,
 }: ShareRideProviderProviderProps) => {
   const [wallet, setWallet] = useState<SolanaWallet>();
-  const [loadingText, setLoadingText] = useState("123");
+  const [loadingText, setLoadingText] = useState("");
   const [provider, setProvider] = useState<SolanaProvider>();
   // const [tokenAccount, setTokenAccount] = useState<AccountInfo>();
   const { tokenAccount, loadTokenAccount, mintAmountToTokenAccount } =
@@ -71,17 +72,30 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
     }
   }, [provider]);
 
-  const shareRideState = useShareRideState(provider);
+  const shareRideState = useShareRideState(provider, tokenAccount);
 
   const _intializeEscrow = () => {
     if (provider && tokenAccount) {
-      return intializeEscrow(provider, tokenAccount);
+      // return intializeEscrow(provider, tokenAccount);
     }
   };
 
   const _exchangeEscrow = () => {
     if (provider && tokenAccount) {
-      return exchangeEscrow(provider, tokenAccount);
+      // return exchangeEscrow(provider, tokenAccount);
+    }
+  };
+
+  const completeRide = async (rideId: string) => {
+    console.log(
+      "Complete ride",
+      rideId,
+      shareRideState.rides[0],
+    );
+    //TODO: Fix this hardcoded ride
+    const ride: any = shareRideState.rides[0];
+    if (provider && tokenAccount) {
+      return exchangeEscrow(provider, tokenAccount, ride.escrow);
     }
   };
 
@@ -95,6 +109,7 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
       exchangeEscrow: _exchangeEscrow,
       mintAmountToTokenAccount,
       loadingText,
+      completeRide,
     }),
     [wallet, shareRideState, tokenAccount, provider]
   );

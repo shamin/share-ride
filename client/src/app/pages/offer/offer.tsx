@@ -148,7 +148,7 @@ export const Offer = () => {
             selected={startDate}
             onChange={(date) => setStartDate(date as Date)}
           />
-          <p>Cost Per Km (Sol)</p>
+          <p>Cost/km (sherekhan)</p>
           <TextInput
             value={costPerKm}
             onChange={(e: any) => setCostPerKm(e.target.value)}

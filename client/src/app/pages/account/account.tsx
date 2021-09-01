@@ -45,7 +45,7 @@ const Account: React.FC<AccountProps> = (props: AccountProps) => {
     <div className="container__account">
       <h1>Account</h1>
       {wallet ? (
-        <div>Balance: {tokenAccount?.amount.toNumber()} Shere Khan</div>
+        <div>Balance: {tokenAccount?.amount.toNumber()} sherekhan (Share ride token)</div>
       ) : (
         <Button onClick={() => initializeWallet()}>Connect Wallet</Button>
       )}
