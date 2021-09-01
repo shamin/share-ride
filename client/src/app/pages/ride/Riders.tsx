@@ -110,7 +110,7 @@ export const RidersModal: React.FC<RiderModalProps> = ({
               </Table.TextCell>
               <Table.TextCell>{d.selectedSeats}</Table.TextCell>
               <Table.TextCell>{d.costPerKm}</Table.TextCell>
-              <Table.TextCell>{d.costPerKm * distance * seatsRequired}</Table.TextCell>
+              <Table.TextCell>{Math.ceil(d.costPerKm * distance * seatsRequired)}</Table.TextCell>
               <Table.TextCell><Button onClick={() => onDriverClicked(d)} appearance="primary" intent="success">Accept</Button></Table.TextCell>
             </Table.Row>
           ))}

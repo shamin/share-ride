@@ -2,12 +2,14 @@ import React from "react";
 import { useShareRide } from "../../web3/provider";
 import { SideBar } from "./components/sidebar";
 import "./dashboard.scss";
+import LoadingModal from "./loadingModal";
 
 export const Dashboard: React.FC = ({ children }) => {
-  const { tokenAccount } = useShareRide();
+  const { tokenAccount, loadingText } = useShareRide();
   return (
     <div>
       <SideBar />
+      <LoadingModal isShown={!!loadingText} loadingText={loadingText} />
       <div className="main">
         <div className="topBar">
           <div className="card">

@@ -2,17 +2,17 @@ import { BN, Provider, utils } from "@project-serum/anchor";
 import { Keypair, PublicKey, SYSVAR_RENT_PUBKEY } from "@solana/web3.js";
 import { TOKEN_PROGRAM_ID, AccountInfo } from "@solana/spl-token";
 import { loadEscrowProgram } from "../../program";
+import { getTokenAccount } from "./tokenAccount";
+import { mintPublicKey } from "./mint";
 
 export const intializeEscrow = async (
   provider: Provider,
-  tokenAccount: AccountInfo
+  tokenAccount: AccountInfo,
+  passengerAmount: number,
+  driverPublicKey: string
 ) => {
-  // TODO: Move this to actual driver & fix passenger amount
-  const driverPublicKey = "6KwDFRmHUJcwLJcqU6wFzX8ZZkDR4hgoo3QMbKpg5PwL";
-  const passengerAmount = 20;
-
   const program = loadEscrowProgram(provider);
-  console.log("Program loaded", program);
+  console.log("Program loaded", program, passengerAmount, driverPublicKey);
   const escrowAccount = Keypair.generate();
 
   await program.rpc.initializeEscrow(new BN(passengerAmount), {
@@ -40,7 +40,7 @@ export const intializeEscrow = async (
 
   console.log(pda, pda.toString());
 
-  return pda;
+  return escrowAccount.publicKey.toString();
 };
 
 export const getEscrowAccount = (
@@ -53,31 +53,26 @@ export const getEscrowAccount = (
 
 export const exchangeEscrow = async (
   provider: Provider,
-  tokenAccount: AccountInfo
+  tokenAccount: AccountInfo,
+  escrow: string,
 ) => {
-  const escrow = "BZVtnS93wkF5PRNTkp6Se4dnK8sr7sj2LAgXNntrBj9r";
   const program = loadEscrowProgram(provider);
 
-  console.log("Loading escrow account");
   const escrowAccount = (await getEscrowAccount(provider, escrow)) as any;
-  console.log(escrowAccount);
-  console.log({
-    driver: provider.wallet.publicKey,
-    driverReceiveTokenAccount: tokenAccount.address,
-    passengerMainAccount: escrowAccount.passengerKey,
-    pdaAccount: "6eVFEduLkLoLMJ3ASaKndirfKJHL4rtNqHvUwRC2Ph3G",
-    pdaDepositTokenAccount: escrowAccount.passengerDepositTokenAccount,
-    tokenProgram: TOKEN_PROGRAM_ID,
-    escrowAccount: escrow,
-  });
+  
+  const passengerTokenAccount = await getTokenAccount(
+    provider,
+    mintPublicKey,
+    escrowAccount.passengerDepositTokenAccount
+  );
 
   await program.rpc.exchange({
     accounts: {
       driver: provider.wallet.publicKey,
       driverReceiveTokenAccount: tokenAccount.address,
       passengerMainAccount: escrowAccount.passengerKey,
-      pdaAccount: "6eVFEduLkLoLMJ3ASaKndirfKJHL4rtNqHvUwRC2Ph3G",
-      pdaDepositTokenAccount:escrowAccount.passengerDepositTokenAccount,
+      pdaAccount: passengerTokenAccount.owner.toString(),
+      pdaDepositTokenAccount: escrowAccount.passengerDepositTokenAccount,
       tokenProgram: TOKEN_PROGRAM_ID,
       escrowAccount: escrow,
     },

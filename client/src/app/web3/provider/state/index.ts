@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ShareRideModel } from "./model";
 import { Provider } from "@project-serum/anchor";
+import { AccountInfo } from "@solana/spl-token";
+import { intializeEscrow } from "../account/escrow";
 
 interface Driver {}
 
@@ -18,7 +20,10 @@ export interface ShareRideState {
   loading: boolean;
 }
 
-export const useShareRideState = (provider?: Provider): ShareRideState => {
+export const useShareRideState = (
+  provider?: Provider,
+  tokenAccount?: AccountInfo
+): ShareRideState => {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [rides, setRides] = useState<Ride[]>([]);
 
@@ -31,13 +36,15 @@ export const useShareRideState = (provider?: Provider): ShareRideState => {
 
   const initializeShareRideModel = async (provider: Provider) => {
     const _shareRideModel = new ShareRideModel(provider);
-    await _shareRideModel.initialize();
+    const data = await _shareRideModel.initialize();
+    setDrivers(data.drivers);
+    setRides(data.rides);
     shareRideModelRef.current = _shareRideModel;
   };
 
   useEffect(() => {
     if (provider && !shareRideModelRef.current) {
-      console.log("Initing share ride model")
+      console.log("Initing share ride model");
       initializeShareRideModel(provider);
     }
   }, [provider]);
@@ -89,14 +96,31 @@ export const useShareRideState = (provider?: Provider): ShareRideState => {
   };
 
   const addRide = async (ride: any) => {
-    if (!shareRideModelRef.current) {
+    console.log(!shareRideModelRef.current, !provider, !tokenAccount);
+    if (!shareRideModelRef.current || !provider || !tokenAccount) {
+      // TODO: Handle this in the future - no_mvp
       return;
     }
-    setLoading(true);
-    await shareRideModelRef.current.addRides(ride);
-    await loadRides();
-    setLoading(false);
-    setShowCompleteModal(true);
+    console.log(ride);
+    if (provider && tokenAccount) {
+      const escrow = await intializeEscrow(
+        provider,
+        tokenAccount,
+        ride.totalCost,
+        ride.walletKey
+      );
+      if (!shareRideModelRef.current) {
+        return;
+      }
+      setLoading(true);
+      await shareRideModelRef.current.addRides({
+        ...ride,
+        escrow,
+      });
+      await loadRides();
+      setLoading(false);
+      setShowCompleteModal(true);
+    }
   };
 
   return {
