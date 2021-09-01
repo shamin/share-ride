@@ -50,7 +50,7 @@ const Account: React.FC<AccountProps> = (props: AccountProps) => {
         <Button onClick={() => initializeWallet()}>Connect Wallet</Button>
       )}
       <div>
-        <h3>Credit Account</h3>
+        <h3>Credit Token Account</h3>
         <TextInput
           name="text-input"
           type="number"
@@ -64,12 +64,12 @@ const Account: React.FC<AccountProps> = (props: AccountProps) => {
           Add Tokens
         </Button>
       </div>
-      <div>
+      {/* <div>
         <Button marginTop={20} onClick={() => transactToken()}>Transact Token</Button>
-      </div>
-      <div>
+      </div> */}
+      {/* <div>
         <Button marginTop={20} onClick={() => creditToken()}>Credit Token</Button>
-      </div>
+      </div> */}
     </div>
   );
 };

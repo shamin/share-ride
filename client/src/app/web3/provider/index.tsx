@@ -52,7 +52,7 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
   const [provider, setProvider] = useState<SolanaProvider>();
   // const [tokenAccount, setTokenAccount] = useState<AccountInfo>();
   const { tokenAccount, loadTokenAccount, mintAmountToTokenAccount } =
-    useTokenAccount(provider as Provider);
+    useTokenAccount(provider as Provider, setLoadingText);
 
   const loadWallet = useCallback(async () => {
     const _wallet = await connectWallet();
@@ -72,7 +72,11 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
     }
   }, [provider]);
 
-  const shareRideState = useShareRideState(provider, tokenAccount);
+  const shareRideState = useShareRideState(
+    provider,
+    tokenAccount,
+    setLoadingText
+  );
 
   const _intializeEscrow = () => {
     if (provider && tokenAccount) {
@@ -87,15 +91,15 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
   };
 
   const completeRide = async (rideId: string) => {
-    console.log(
-      "Complete ride",
-      rideId,
-      shareRideState.rides[0],
-    );
+    console.log("Complete ride", rideId, shareRideState.rides[0]);
     //TODO: Fix this hardcoded ride
     const ride: any = shareRideState.rides[0];
     if (provider && tokenAccount) {
-      return exchangeEscrow(provider, tokenAccount, ride.escrow);
+      setLoadingText("Transfering sherekhans to your account")
+      await exchangeEscrow(provider, tokenAccount, ride.escrow);
+      setLoadingText("Reloading token account")
+      await loadTokenAccount();
+      setLoadingText("")
     }
   };
 

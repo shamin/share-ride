@@ -21,8 +21,9 @@ export interface ShareRideState {
 }
 
 export const useShareRideState = (
-  provider?: Provider,
-  tokenAccount?: AccountInfo
+  provider: Provider | undefined,
+  tokenAccount: AccountInfo | undefined,
+  setLoadingText: React.Dispatch<React.SetStateAction<string>>
 ): ShareRideState => {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [rides, setRides] = useState<Ride[]>([]);
@@ -35,10 +36,12 @@ export const useShareRideState = (
   const shareRideModelRef = useRef<ShareRideModel>();
 
   const initializeShareRideModel = async (provider: Provider) => {
+    setLoadingText("Loading...")
     const _shareRideModel = new ShareRideModel(provider);
     const data = await _shareRideModel.initialize();
     setDrivers(data.drivers);
     setRides(data.rides);
+    setLoadingText("")
     shareRideModelRef.current = _shareRideModel;
   };
 
@@ -57,14 +60,14 @@ export const useShareRideState = (
     if (driversLoading) {
       return;
     }
-    setDriversLoading(true);
+    setLoadingText("Loading rides")
     try {
       const drivers = await shareRideModelRef.current.getActiveDrivers();
       setDrivers(drivers);
     } catch (err) {
       console.log("Error loading drivers", err);
     }
-    setDriversLoading(false);
+    setLoadingText("")
   };
 
   const loadRides = async () => {
@@ -74,29 +77,30 @@ export const useShareRideState = (
     if (ridesLoading) {
       return;
     }
-    setRidesLoading(true);
+    setLoadingText("Loading rides")
     try {
       const rides = await shareRideModelRef.current.getActiveRides();
       setRides(rides);
     } catch (err) {
       console.log("Error loading drivers");
     }
-    setRidesLoading(false);
+    setLoadingText("")
   };
 
   const addDriver = async (driver: any) => {
+    setLoadingText("Offering a ride")
     if (!shareRideModelRef.current) {
       return;
     }
-    setLoading(true);
     await shareRideModelRef.current.addDrivers(driver);
     await loadDrivers();
-    setLoading(false);
+    setLoadingText("")
     setShowCompleteModal(true);
   };
 
   const addRide = async (ride: any) => {
     console.log(!shareRideModelRef.current, !provider, !tokenAccount);
+    setLoadingText("Accepting a ride")
     if (!shareRideModelRef.current || !provider || !tokenAccount) {
       // TODO: Handle this in the future - no_mvp
       return;
@@ -112,15 +116,14 @@ export const useShareRideState = (
       if (!shareRideModelRef.current) {
         return;
       }
-      setLoading(true);
       await shareRideModelRef.current.addRides({
         ...ride,
         escrow,
       });
       await loadRides();
-      setLoading(false);
       setShowCompleteModal(true);
     }
+    setLoadingText("")
   };
 
   return {
