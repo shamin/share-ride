@@ -4,7 +4,7 @@ import TestWeave from "testweave-sdk";
 
 export type ArweaveDriver = {
   archive: string;
-}
+};
 
 class ArweaveService {
   arweave: Arweave;
@@ -33,7 +33,7 @@ class ArweaveService {
     // transaction.addTag("Content-Type", "text/plain");
     await this.arweave.transactions.sign(transaction, this.walletKey!);
     await this.arweave.transactions.post(transaction);
-    console.log("posted transaction");
+    console.log("posted transaction", transaction);
     await this.testWeave!.mine(); // need this to force immediate mine of related block
     console.log("forced mine");
     const status = await this.arweave.transactions.getStatus(transaction.id);
@@ -42,20 +42,14 @@ class ArweaveService {
   }
 
   async getData(drivers: Array<ArweaveDriver>): Promise<Array<string>> {
-    return new Promise((resolve, reject) => {
-      const arweaveData =drivers.map(async ({ archive }) => {
-        const data =  await this.arweave.transactions.getData(
-          archive,
-          { decode: true, string: true }
-        );
-        return JSON.parse(data.toString());
-      })
-      Promise.all(arweaveData).then((d) => {
-        resolve(d);
-      }).catch((err) => {
-        reject(err)
-      })
-    })
+    const arweaveData = drivers.map(async ({ archive }) => {
+      const data = await this.arweave.transactions.getData(archive, {
+        decode: true,
+        string: true,
+      });
+      return JSON.parse(data?.toString());
+    });
+    return Promise.all(arweaveData);
   }
 }
 

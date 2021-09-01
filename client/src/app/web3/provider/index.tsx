@@ -27,9 +27,11 @@ interface ShareRideProviderContextType {
   loadWallet: () => Promise<void>;
   shareRideState: ShareRideState;
   tokenAccount?: AccountInfo;
-  intializeEscrow: () => Promise<PublicKey> | undefined;
-  exchangeEscrow: () => Promise<void> | undefined;
-  mintAmountToTokenAccount: (amount: number) => Promise<void>
+  intializeEscrow: any;
+  exchangeEscrow: () => void;
+  mintAmountToTokenAccount: (amount: number) => Promise<void>;
+  loadingText: string;
+  completeRide: (rideId: string) => Promise<void>;
 }
 
 const ShareRideProviderContext = createContext<ShareRideProviderContextType>(
@@ -46,11 +48,11 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
   children,
 }: ShareRideProviderProviderProps) => {
   const [wallet, setWallet] = useState<SolanaWallet>();
+  const [loadingText, setLoadingText] = useState("");
   const [provider, setProvider] = useState<SolanaProvider>();
   // const [tokenAccount, setTokenAccount] = useState<AccountInfo>();
-  const { tokenAccount, loadTokenAccount, mintAmountToTokenAccount } = useTokenAccount(
-    provider as Provider
-  );
+  const { tokenAccount, loadTokenAccount, mintAmountToTokenAccount } =
+    useTokenAccount(provider as Provider, setLoadingText);
 
   const loadWallet = useCallback(async () => {
     const _wallet = await connectWallet();
@@ -70,17 +72,34 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
     }
   }, [provider]);
 
-  const shareRideState = useShareRideState(provider);
+  const shareRideState = useShareRideState(
+    provider,
+    tokenAccount,
+    setLoadingText
+  );
 
   const _intializeEscrow = () => {
     if (provider && tokenAccount) {
-      return intializeEscrow(provider, tokenAccount);
+      // return intializeEscrow(provider, tokenAccount);
     }
   };
 
   const _exchangeEscrow = () => {
     if (provider && tokenAccount) {
-      return exchangeEscrow(provider, tokenAccount);
+      // return exchangeEscrow(provider, tokenAccount);
+    }
+  };
+
+  const completeRide = async (rideId: string) => {
+    console.log("Complete ride", rideId, shareRideState.rides[0]);
+    //TODO: Fix this hardcoded ride
+    const ride: any = shareRideState.rides[0];
+    if (provider && tokenAccount) {
+      setLoadingText("Transfering sherekhans to your account")
+      await exchangeEscrow(provider, tokenAccount, ride.escrow);
+      setLoadingText("Reloading token account")
+      await loadTokenAccount();
+      setLoadingText("")
     }
   };
 
@@ -93,6 +112,8 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
       intializeEscrow: _intializeEscrow,
       exchangeEscrow: _exchangeEscrow,
       mintAmountToTokenAccount,
+      loadingText,
+      completeRide,
     }),
     [wallet, shareRideState, tokenAccount, provider]
   );

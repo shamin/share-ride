@@ -30,7 +30,12 @@ export class ShareRideModel {
 
   async initialize() {
     try {
-      await this.getAllDrivers();
+      const drivers = await this.getActiveDrivers();
+      const rides = await this.getActiveRides();
+      return {
+        drivers,
+        rides,
+      };
     } catch (err) {
       console.log("Error getting drivers", err);
       console.log(
@@ -42,6 +47,10 @@ export class ShareRideModel {
           authority: this.provider.wallet.publicKey,
         },
       });
+      return {
+        drivers: [],
+        rides: [],
+      };
     }
   }
 
@@ -103,6 +112,7 @@ export class ShareRideModel {
       ({ archive }: any) => archive !== DUMMY_TX_ID
     );
     const ridesData = await this.arweaveService.getData(filteredRides);
+    console.log("Rides data", ridesData)
     return ridesData;
   }
 

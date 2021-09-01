@@ -2,8 +2,10 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
+    "start": "npm run dev",
     "build": "tsc && vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "create-mint": "node scripts/createMint.js"
   },
   "dependencies": {
     "@project-serum/anchor": "^0.13.2",

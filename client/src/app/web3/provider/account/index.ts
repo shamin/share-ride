@@ -19,7 +19,10 @@ const getToken = () => {
   return localStorage.getItem(TOKEN_ACCOUNT);
 };
 
-export const useTokenAccount = (provider: Provider) => {
+export const useTokenAccount = (
+  provider: Provider,
+  setLoadingText: React.Dispatch<React.SetStateAction<string>>
+) => {
   const [tokenAccount, setTokenAccount] = useState<AccountInfo>();
 
   const loadTokenAccount = async () => {
@@ -27,16 +30,21 @@ export const useTokenAccount = (provider: Provider) => {
     let token = getToken();
     if (!token) {
       console.log("Account does not exist creating new one");
+      setLoadingText(
+        "Token account does not exist. Creating a new token account."
+      );
       token = (await createTokenAccount(provider, mintPublicKey)).toString();
       saveToken(token);
     }
 
+    setLoadingText("Loading token account");
     const _tokenAccount = await getTokenAccount(
       provider,
       mintPublicKey,
       new PublicKey(token)
     );
 
+    setLoadingText("");
     setTokenAccount(_tokenAccount);
     console.log("token account", _tokenAccount);
     return _tokenAccount;
@@ -44,6 +52,7 @@ export const useTokenAccount = (provider: Provider) => {
 
   const mintAmountToTokenAccount = async (amount: number) => {
     if (tokenAccount) {
+      setLoadingText(`Minting ${amount} tokens`);
       await mintToTokenAccount(
         provider,
         mintPublicKey,
@@ -51,13 +60,13 @@ export const useTokenAccount = (provider: Provider) => {
         tokenAccount.address,
         amount
       );
-      await loadTokenAccount()
+      await loadTokenAccount();
     }
   };
 
   return {
     tokenAccount,
     loadTokenAccount,
-    mintAmountToTokenAccount
+    mintAmountToTokenAccount,
   };
 };

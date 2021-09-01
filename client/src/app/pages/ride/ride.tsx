@@ -110,6 +110,7 @@ export const Ride = () => {
             ...d,
             driver: d.walletKey,
             riderKey: walletKey,
+            totalCost: Math.ceil(d.costPerKm * routeDistance * selectedSeats)
           };
           addRide(ride);
           setShowDrivers(false);
@@ -183,7 +184,7 @@ export const Ride = () => {
           {!!cost && (
             <div>
               <h3>Estimated Cost</h3>
-              <p>{cost} Sol</p>
+              <p>{Math.ceil(cost)} sherekhan</p>
             </div>
           )}
         </div>
