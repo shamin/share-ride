@@ -4,7 +4,7 @@ import TestWeave from "testweave-sdk";
 
 export type ArweaveDriver = {
   archive: string;
-}
+};
 
 class ArweaveService {
   arweave: Arweave;
@@ -42,20 +42,14 @@ class ArweaveService {
   }
 
   async getData(drivers: Array<ArweaveDriver>): Promise<Array<string>> {
-    return new Promise((resolve, reject) => {
-      const arweaveData =drivers.map(async ({ archive }) => {
-        const data =  await this.arweave.transactions.getData(
-          archive,
-          { decode: true, string: true }
-        );
-        return JSON.parse(data.toString());
-      })
-      Promise.all(arweaveData).then((d) => {
-        resolve(d);
-      }).catch((err) => {
-        reject(err)
-      })
-    })
+    const arweaveData = drivers.map(async ({ archive }) => {
+      const data = await this.arweave.transactions.getData(archive, {
+        decode: true,
+        string: true,
+      });
+      return JSON.parse(data?.toString());
+    });
+    return Promise.all(arweaveData);
   }
 }
 

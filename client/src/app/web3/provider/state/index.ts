@@ -31,13 +31,15 @@ export const useShareRideState = (provider?: Provider): ShareRideState => {
 
   const initializeShareRideModel = async (provider: Provider) => {
     const _shareRideModel = new ShareRideModel(provider);
-    await _shareRideModel.initialize();
+    const data = await _shareRideModel.initialize();
+    setDrivers(data.drivers);
+    setRides(data.rides);
     shareRideModelRef.current = _shareRideModel;
   };
 
   useEffect(() => {
     if (provider && !shareRideModelRef.current) {
-      console.log("Initing share ride model")
+      console.log("Initing share ride model");
       initializeShareRideModel(provider);
     }
   }, [provider]);

@@ -29,7 +29,8 @@ interface ShareRideProviderContextType {
   tokenAccount?: AccountInfo;
   intializeEscrow: () => Promise<PublicKey> | undefined;
   exchangeEscrow: () => Promise<void> | undefined;
-  mintAmountToTokenAccount: (amount: number) => Promise<void>
+  mintAmountToTokenAccount: (amount: number) => Promise<void>;
+  loadingText: string;
 }
 
 const ShareRideProviderContext = createContext<ShareRideProviderContextType>(
@@ -46,11 +47,11 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
   children,
 }: ShareRideProviderProviderProps) => {
   const [wallet, setWallet] = useState<SolanaWallet>();
+  const [loadingText, setLoadingText] = useState("123");
   const [provider, setProvider] = useState<SolanaProvider>();
   // const [tokenAccount, setTokenAccount] = useState<AccountInfo>();
-  const { tokenAccount, loadTokenAccount, mintAmountToTokenAccount } = useTokenAccount(
-    provider as Provider
-  );
+  const { tokenAccount, loadTokenAccount, mintAmountToTokenAccount } =
+    useTokenAccount(provider as Provider);
 
   const loadWallet = useCallback(async () => {
     const _wallet = await connectWallet();
@@ -93,6 +94,7 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
       intializeEscrow: _intializeEscrow,
       exchangeEscrow: _exchangeEscrow,
       mintAmountToTokenAccount,
+      loadingText,
     }),
     [wallet, shareRideState, tokenAccount, provider]
   );
