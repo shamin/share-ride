@@ -27,7 +27,9 @@ class ArweaveService {
         this.walletKey = this.testWeave?.rootJWK;
       });
     } else {
-      this.arweave = Arweave.init({});
+      this.arweave = Arweave.init({
+        host: 'arweave.net'
+      });
       this.walletKey = WalletJson;
     }
   }
@@ -53,13 +55,18 @@ class ArweaveService {
 
   async getData(drivers: Array<ArweaveDriver>): Promise<Array<unknown>> {
     const arweaveData = drivers.map(async ({ archive }) => {
-      const data = await this.arweave.transactions.getData(archive, {
-        decode: true,
-        string: true,
-      });
-      return { ...JSON.parse(data?.toString()), archiveId: archive };
+      try {
+        const data = await this.arweave.transactions.getData(archive, {
+          decode: true,
+          string: true,
+        });
+        return { ...JSON.parse(data?.toString()), archiveId: archive };     
+      } catch(err) {
+        return null
+      }
     });
-    return Promise.all(arweaveData);
+    const data = await Promise.all(arweaveData);
+    return data.filter((d)=>d!==null)
   }
 }
 

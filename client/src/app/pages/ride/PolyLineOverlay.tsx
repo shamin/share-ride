@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React from "react";
 import { CanvasOverlay } from "react-map-gl";
 
 const settings = {
