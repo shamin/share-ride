@@ -48,10 +48,15 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
   children,
 }: ShareRideProviderProviderProps) => {
   const [wallet, setWallet] = useState<SolanaWallet>();
-  const [loadingText, setLoadingText] = useState("");
+  const [loadingText, _setLoadingText] = useState("");
   const [provider, setProvider] = useState<SolanaProvider>();
   // const [tokenAccount, setTokenAccount] = useState<AccountInfo>();
-  const { tokenAccount, loadTokenAccount, mintAmountToTokenAccount } =
+
+  const setLoadingText = (loading: string) => {
+    _setLoadingText(loading);
+  };
+
+  const { tokenAccount, loadTokenAccount, mintAmountToTokenAccount, tokenAccountCreateLoading } =
     useTokenAccount(provider as Provider, setLoadingText);
 
   const loadWallet = useCallback(async () => {
@@ -91,23 +96,31 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
   };
 
   const completeRide = async (driverId: string) => {
-    const rides = shareRideState.rides.filter(({ driveId }) => driveId === driverId)
+    const rides = shareRideState.rides.filter(
+      ({ driveId }) => driveId === driverId
+    );
     console.log("Complete ride", rides);
 
-    console.log("Remove driver", driverId)
-    console.log("Remove rides", rides.map((r)=>r.archiveId))
-    setLoadingText("Transfering sherekhans to your account")
+    console.log("Remove driver", driverId);
+    console.log(
+      "Remove rides",
+      rides.map((r) => r.archiveId)
+    );
+    setLoadingText("Transfering sherekhans to your account");
 
     if (provider && tokenAccount) {
-      await Promise.all(rides.map(async (r)=>{
-        await exchangeEscrow(provider, tokenAccount, r.escrow)
-      }))
+      await Promise.all(
+        rides.map(async (r) => {
+          await exchangeEscrow(provider, tokenAccount, r.escrow);
+        })
+      );
     }
 
-    setLoadingText("Reloading token account")
+    setLoadingText("Reloading token account");
     await loadTokenAccount();
     await shareRideState.removeDriver(driverId);
-    setLoadingText("")
+    setLoadingText("Reloading rides");
+    await shareRideState.loadDrivers();
 
     //TODO: Fix this hardcoded ride
     // console.log(shareRideState.rides);
@@ -131,7 +144,7 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
       intializeEscrow: _intializeEscrow,
       exchangeEscrow: _exchangeEscrow,
       mintAmountToTokenAccount,
-      loadingText,
+      loadingText: tokenAccountCreateLoading ? "Creating token account" : loadingText,
       completeRide,
     }),
     [wallet, shareRideState, tokenAccount, provider]

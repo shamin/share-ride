@@ -3,14 +3,7 @@ import { Table, Button } from "evergreen-ui";
 import { useHistory } from "react-router-dom";
 import "./home.scss";
 import { useShareRide } from "../../web3/provider";
-
-type Ride = {
-  id: string,
-  from: string,
-  to: string,
-  date: string,
-  driver: string,
-}
+import { Ride } from "../../web3/provider/state";
 
 const formatDate = (d: Date) => {
   let dd: string | number = d.getDate();
@@ -25,6 +18,10 @@ const formatDate = (d: Date) => {
   }
   return dd + "/" + mm + "/" + yyyy;
 };
+
+const ridersAccepted = (rides: Ride[]) => {
+  return rides.map((r)=>r.selectedSeats).reduce((a, b) => a + b, 0)
+}
 
 export const Home = () => {
   const { wallet, shareRideState, completeRide } = useShareRide();
@@ -146,7 +143,7 @@ export const Home = () => {
                       {ride.seatsOffered}
                     </Table.TextCell>
                     <Table.TextCell isNumber>
-                      {ride.riders.length}
+                      {ridersAccepted(ride.riders)}
                     </Table.TextCell>
                     <Table.TextCell>
                       <Button
@@ -157,7 +154,7 @@ export const Home = () => {
                         disabled={formatDate(new Date()) !== ride.date}
                         intent="success"
                       >
-                        Complete Ride
+                        Mark as complete
                       </Button>
                     </Table.TextCell>
                   </Table.Row>

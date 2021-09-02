@@ -21,9 +21,10 @@ const getToken = () => {
 
 export const useTokenAccount = (
   provider: Provider,
-  setLoadingText: React.Dispatch<React.SetStateAction<string>>
+  setLoadingText: (loadingText: string) => void
 ) => {
   const [tokenAccount, setTokenAccount] = useState<AccountInfo>();
+  const [tokenAccountCreateLoading, setTokenAccountCreateLoading] = useState(false);
 
   const loadTokenAccount = async () => {
     console.log("Loading token account");
@@ -33,7 +34,9 @@ export const useTokenAccount = (
       setLoadingText(
         "Token account does not exist. Creating a new token account."
       );
+      setTokenAccountCreateLoading(true)
       token = (await createTokenAccount(provider, mintPublicKey)).toString();
+      setTokenAccountCreateLoading(false)
       saveToken(token);
     }
 
@@ -68,5 +71,6 @@ export const useTokenAccount = (
     tokenAccount,
     loadTokenAccount,
     mintAmountToTokenAccount,
+    tokenAccountCreateLoading,
   };
 };
