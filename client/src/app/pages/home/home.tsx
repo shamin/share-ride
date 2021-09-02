@@ -31,10 +31,6 @@ export const Home = () => {
   const walletKey = wallet?.publicKey?.toBase58();
   console.log("Home", shareRideState?.drivers);
 
-  const {
-    removeRide,
-  } = shareRideState;
-
   useEffect(() => {
     if (wallet) {
       shareRideState.loadDrivers();
