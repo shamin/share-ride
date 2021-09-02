@@ -3,7 +3,7 @@ import { PublicKey } from "@solana/web3.js";
 import mintAccountJson from "./mint-account.json";
 
 export const mintPublicKey = new PublicKey(
-  "G8i3di2WFBtYYgfksynQ2gL7pEqc68bYMSWcqAEuEjxF"
+  "CjhAyWDmUXxKTfUefqGVsnd1uXk82sAT4q8R5usbxYtz"
 );
 
 export const getMintAuthority = () => {
