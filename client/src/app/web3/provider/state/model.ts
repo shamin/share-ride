@@ -26,7 +26,7 @@ export class ShareRideModel {
   constructor(provider: Provider) {
     this.provider = provider;
     this.program = loadShareRideProgram(provider);
-    this.arweaveService = new ArweaveService();
+    this.arweaveService = new ArweaveService({ localhost: false });
   }
 
   async initialize() {

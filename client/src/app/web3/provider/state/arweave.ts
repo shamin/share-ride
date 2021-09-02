@@ -1,6 +1,7 @@
 import Arweave from "arweave";
 import { JWKInterface } from "arweave/node/lib/wallet";
 import TestWeave from "testweave-sdk";
+import WalletJson from "./wallet.json";
 
 export type ArweaveDriver = {
   archive: string;
@@ -10,18 +11,25 @@ class ArweaveService {
   arweave: Arweave;
   testWeave?: TestWeave;
   walletKey?: JWKInterface;
+  isLocal = false;
 
-  constructor() {
-    this.arweave = Arweave.init({
-      host: "localhost",
-      port: 1984,
-      protocol: "http",
-    });
+  constructor({ localhost = false }: { localhost?: boolean }) {
+    this.isLocal = localhost;
+    if (localhost) {
+      this.arweave = Arweave.init({
+        host: "localhost",
+        port: 1984,
+        protocol: "http",
+      });
 
-    TestWeave.init(this.arweave).then((testWeave: any) => {
-      this.testWeave = testWeave;
-      this.walletKey = this.testWeave?.rootJWK;
-    });
+      TestWeave.init(this.arweave).then((testWeave: any) => {
+        this.testWeave = testWeave;
+        this.walletKey = this.testWeave?.rootJWK;
+      });
+    } else {
+      this.arweave = Arweave.init({});
+      this.walletKey = WalletJson;
+    }
   }
 
   async saveData(message: unknown): Promise<string> {
@@ -34,8 +42,10 @@ class ArweaveService {
     await this.arweave.transactions.sign(transaction, this.walletKey!);
     await this.arweave.transactions.post(transaction);
     console.log("posted transaction", transaction);
-    await this.testWeave!.mine(); // need this to force immediate mine of related block
-    console.log("forced mine");
+    if (this.isLocal) {
+      console.log("forced mine");
+      await this.testWeave!.mine(); // need this to force immediate mine of related block
+    }
     const status = await this.arweave.transactions.getStatus(transaction.id);
     console.log("saveData status", status);
     return transaction.id;
@@ -47,7 +57,7 @@ class ArweaveService {
         decode: true,
         string: true,
       });
-      return {...JSON.parse(data?.toString()), archiveId: archive};
+      return { ...JSON.parse(data?.toString()), archiveId: archive };
     });
     return Promise.all(arweaveData);
   }
