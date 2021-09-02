@@ -53,7 +53,9 @@ export async function createTokenAccount(
       provider.wallet.publicKey
     ))
   );
+  console.log("Creating token account")
   await provider.send(transaction, [newAccountPubkey]);
+  console.log("Token account complete")
 
   return newAccountPubkey.publicKey;
 }
