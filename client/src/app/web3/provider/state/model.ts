@@ -1,4 +1,5 @@
 import { Program, Provider } from "@project-serum/anchor";
+import { Ride } from ".";
 import { loadShareRideProgram } from "../../program";
 import ArweaveService, { ArweaveDriver } from "./arweave";
 
@@ -109,10 +110,9 @@ export class ShareRideModel {
   async getActiveRides() {
     const drivers = await this.getAllRides();
     const filteredRides = (drivers as ArweaveDriver[]).filter(
-      ({ archive }: any) => archive !== DUMMY_TX_ID
+      ({ archive }) => archive !== DUMMY_TX_ID
     );
-    const ridesData = await this.arweaveService.getData(filteredRides);
-    console.log("Rides data", ridesData)
+    const ridesData = (await this.arweaveService.getData(filteredRides)) as Ride[];
     return ridesData;
   }
 
@@ -130,6 +130,21 @@ export class ShareRideModel {
       });
     } catch {
       console.log("Error while adding ride");
+    }
+  }
+
+  async removeDriver(archiveId: string) {
+    try {
+      const driver = new Driver({
+        archive: archiveId,
+      });
+      await this.program.state.rpc.removeDriver(driver, {
+        accounts: {
+          authority: this.provider.wallet.publicKey,
+        },
+      });
+    } catch {
+      console.log("Error while removing ride");
     }
   }
 }

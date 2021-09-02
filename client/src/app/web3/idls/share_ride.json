@@ -86,6 +86,24 @@
             }
           }
         ]
+      },
+      {
+        "name": "removeRide",
+        "accounts": [
+          {
+            "name": "authority",
+            "isMut": false,
+            "isSigner": true
+          }
+        ],
+        "args": [
+          {
+            "name": "archive",
+            "type": {
+              "defined": "Archive"
+            }
+          }
+        ]
       }
     ]
   },
@@ -111,6 +129,6 @@
     }
   ],
   "metadata": {
-    "address": "HFhkSCajS4zLo8XCrxbnvNDzJRJTBbGKZ3eVCr2ETVPA"
+    "address": "HtdnYeMXt5yCQi8KsKQnjH5ZyqYN9ePiGZCxvWyMwpNZ"
   }
 }

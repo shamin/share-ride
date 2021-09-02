@@ -90,17 +90,36 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
     }
   };
 
-  const completeRide = async (rideId: string) => {
-    console.log("Complete ride", rideId, shareRideState.rides[0]);
-    //TODO: Fix this hardcoded ride
-    const ride: any = shareRideState.rides[0];
+  const completeRide = async (driverId: string) => {
+    const rides = shareRideState.rides.filter(({ driveId }) => driveId === driverId)
+    console.log("Complete ride", rides);
+
+    console.log("Remove driver", driverId)
+    console.log("Remove rides", rides.map((r)=>r.archiveId))
+    setLoadingText("Transfering sherekhans to your account")
+
     if (provider && tokenAccount) {
-      setLoadingText("Transfering sherekhans to your account")
-      await exchangeEscrow(provider, tokenAccount, ride.escrow);
-      setLoadingText("Reloading token account")
-      await loadTokenAccount();
-      setLoadingText("")
+      await Promise.all(rides.map(async (r)=>{
+        await exchangeEscrow(provider, tokenAccount, r.escrow)
+      }))
     }
+
+    setLoadingText("Reloading token account")
+    await loadTokenAccount();
+    await shareRideState.removeDriver(driverId);
+    setLoadingText("")
+
+    //TODO: Fix this hardcoded ride
+    // console.log(shareRideState.rides);
+    // const ride: any = shareRideState.rides.find(({archiveId}) => archiveId === rideId);
+    // if (provider && tokenAccount) {
+    //   setLoadingText("Transfering sherekhans to your account")
+    //   await exchangeEscrow(provider, tokenAccount, ride.escrow);
+    //   setLoadingText("Reloading token account")
+    //   await loadTokenAccount();
+    //   await shareRideState.removeRide(rideId);
+    //   setLoadingText("")
+    // }
   };
 
   const value = useMemo<ShareRideProviderContextType>(

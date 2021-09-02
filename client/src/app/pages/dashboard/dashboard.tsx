@@ -29,7 +29,7 @@ export const Dashboard: React.FC = ({ children }) => {
               </svg>
             </div>
             <div className="card__info">
-              <p className="card__info-price">
+              <div className="card__info-price">
                 <p className="token__heading">Token Balance</p>{" "}
                 <p>
                   <span className="token__balance">
@@ -37,7 +37,7 @@ export const Dashboard: React.FC = ({ children }) => {
                   </span>{" "}
                   <span className="token__name">ShereKhan</span>
                 </p>
-              </p>
+              </div>
             </div>
           </div>
         </div>

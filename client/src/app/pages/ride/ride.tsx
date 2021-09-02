@@ -12,14 +12,9 @@ import { findDrivers } from "./utils";
 import { useHistory } from "react-router-dom";
 import { useShareRide } from "../../web3/provider";
 import { config } from "../../../config";
+import { Address, Driver } from "../../web3/provider/state";
 
 const COST_PER_KM = 0.1;
-
-type Address = {
-  address: string;
-  latitude: string;
-  longitude: string;
-};
 
 export const Ride = () => {
   const [fromAddress, setFromAddress] = useState<Address>();
@@ -29,7 +24,7 @@ export const Ride = () => {
   const [routeJSON, setRouteJSON] = useState([]);
   const [showDrivers, setShowDrivers] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
-  const [matchingDivers, setMatchingDrivers] = useState([]);
+  const [matchingDivers, setMatchingDrivers] = useState<Driver[]>([]);
   
   const { wallet, shareRideState } = useShareRide();
   const walletKey = wallet?.publicKey?.toBase58();
@@ -39,7 +34,6 @@ export const Ride = () => {
     loadDrivers,
     loadRides,
     addRide,
-    loading,
     setShowCompleteModal,
     showCompleteModal,
   } = shareRideState;
@@ -85,7 +79,7 @@ export const Ride = () => {
   useEffect(() => {
     getOptimizedRoute();
     if (fromAddress && toAddress) {
-      const m = findDrivers({ fromAddress, toAddress, startDate }, drivers);
+      const m = findDrivers({ fromAddress, toAddress, startDate }, drivers).filter((d) => d.walletKey !== walletKey);
       setMatchingDrivers(m);
     }
   }, [fromAddress, toAddress, startDate]);
@@ -110,7 +104,8 @@ export const Ride = () => {
             ...d,
             driver: d.walletKey,
             riderKey: walletKey,
-            totalCost: Math.ceil(d.costPerKm * routeDistance * selectedSeats)
+            totalCost: Math.ceil(d.costPerKm * routeDistance * selectedSeats),
+            driveId: d.archiveId
           };
           addRide(ride);
           setShowDrivers(false);
@@ -174,7 +169,7 @@ export const Ride = () => {
               setSelectedSeats(parseInt(event.target.value, 10))
             }
           >
-            <option value="1" selected>
+            <option value="1">
               1
             </option>
             <option value="2">2</option>
@@ -191,7 +186,6 @@ export const Ride = () => {
           <Button
             disabled={!cost}
             className="find__ride"
-            isLoading={loading}
             onClick={() => setShowDrivers(true)}
           >
             Find Ride
@@ -207,16 +201,16 @@ export const Ride = () => {
           {routeJSON.length > 0 && <PolylineOverlay points={routeJSON} />}
           {fromAddress && (
             <Marker
-              latitude={parseFloat(fromAddress.latitude)}
-              longitude={parseFloat(fromAddress.longitude)}
+              latitude={fromAddress.latitude}
+              longitude={fromAddress.longitude}
             >
               <div className="car" />
             </Marker>
           )}
           {toAddress && (
             <Marker
-              latitude={parseFloat(toAddress.latitude)}
-              longitude={parseFloat(toAddress.longitude)}
+              latitude={toAddress.latitude}
+              longitude={toAddress.longitude}
             >
               <MapMarkerIcon color="#cf1c08" size={20} />
             </Marker>

@@ -41,13 +41,13 @@ class ArweaveService {
     return transaction.id;
   }
 
-  async getData(drivers: Array<ArweaveDriver>): Promise<Array<string>> {
+  async getData(drivers: Array<ArweaveDriver>): Promise<Array<unknown>> {
     const arweaveData = drivers.map(async ({ archive }) => {
       const data = await this.arweave.transactions.getData(archive, {
         decode: true,
         string: true,
       });
-      return JSON.parse(data?.toString());
+      return {...JSON.parse(data?.toString()), archiveId: archive};
     });
     return Promise.all(arweaveData);
   }

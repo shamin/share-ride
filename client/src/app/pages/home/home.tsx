@@ -4,6 +4,14 @@ import { useHistory } from "react-router-dom";
 import "./home.scss";
 import { useShareRide } from "../../web3/provider";
 
+type Ride = {
+  id: string,
+  from: string,
+  to: string,
+  date: string,
+  driver: string,
+}
+
 const formatDate = (d: Date) => {
   let dd: string | number = d.getDate();
   let mm: string | number = d.getMonth() + 1;
@@ -18,45 +26,14 @@ const formatDate = (d: Date) => {
   return dd + "/" + mm + "/" + yyyy;
 };
 
-const ridesData = [
-  {
-    id: 1,
-    to: "Kochi",
-    from: "Kattapana",
-    date: new Date(),
-    driver: "xyz",
-    seats: 1,
-  },
-  {
-    id: 2,
-    to: "Kochi",
-    from: "Kattapana",
-    date: new Date(),
-    driver: "xyz",
-    seats: 2,
-  },
-  {
-    id: 3,
-    to: "Kochi",
-    from: "Kattapana",
-    date: new Date(),
-    driver: "xyz",
-    seats: 3,
-  },
-  {
-    id: 4,
-    to: "Kochi",
-    from: "Kattapana",
-    date: new Date(),
-    driver: "xyz",
-    seats: 4,
-  },
-];
-
 export const Home = () => {
   const { wallet, shareRideState, completeRide } = useShareRide();
   const walletKey = wallet?.publicKey?.toBase58();
-  console.log("Home", shareRideState.drivers);
+  console.log("Home", shareRideState?.drivers);
+
+  const {
+    removeRide,
+  } = shareRideState;
 
   useEffect(() => {
     if (wallet) {
@@ -65,32 +42,34 @@ export const Home = () => {
   }, [wallet]);
 
   const myUpcomingRides = shareRideState.rides
-    .filter(({ riderKey }: any) => riderKey === walletKey)
+    .filter(({ riderKey }) => riderKey === walletKey)
     .map(
-      ({ fromAddress, toAddress, startDate, driver }: any, index: number) => ({
-        id: index,
+      ({ fromAddress, toAddress, startDate, driver, archiveId, driveId }) => ({
+        id: archiveId,
         from: fromAddress.address,
         to: toAddress.address,
         date: formatDate(new Date(startDate)),
         driver,
+        driverData: shareRideState.drivers.filter(({ archiveId }) => driveId === archiveId)[0]
       })
-    );
+    ).filter(({driverData}) => !!driverData);
 
   const myRideOffers = shareRideState.drivers
     .filter(({ walletKey: w }: any) => w === walletKey)
     .map(
       (
-        { fromAddress, toAddress, startDate, selectedSeats }: any,
-        index: number
+        { fromAddress, toAddress, startDate, selectedSeats, archiveId },
       ) => ({
-        id: index,
+        id: archiveId,
         from: fromAddress.address,
         to: toAddress.address,
         seatsOffered: selectedSeats,
         date: formatDate(new Date(startDate)),
-        riders: shareRideState.rides.map((r: any) => r.driverKey === walletKey),
+        riders: shareRideState.rides.filter(({ driveId }) => driveId === archiveId),
       })
     );
+
+  console.log("Ride offers & Upcoming rides", myRideOffers, myUpcomingRides)
 
   const history = useHistory();
   return (
@@ -124,14 +103,25 @@ export const Home = () => {
                 <Table.TextHeaderCell>To</Table.TextHeaderCell>
                 <Table.TextHeaderCell>Driver</Table.TextHeaderCell>
                 <Table.TextHeaderCell>Date</Table.TextHeaderCell>
+                {/* <Table.TextCell>Action</Table.TextCell> */}
               </Table.Head>
               <Table.Body maxHeight={240}>
-                {myUpcomingRides.map((ride: any) => (
+                {myUpcomingRides.map((ride) => (
                   <Table.Row key={ride.id} isSelectable>
                     <Table.TextCell>{ride.from}</Table.TextCell>
                     <Table.TextCell>{ride.to}</Table.TextCell>
                     <Table.TextCell>{ride.driver}</Table.TextCell>
                     <Table.TextCell isNumber>{ride.date}</Table.TextCell>
+                    {/* <Table.TextCell>
+                      <Button
+                        onClick={() => removeRide(ride.id)}
+                        appearance="primary"
+                        disabled={formatDate(new Date()) !== ride.date}
+                        intent="danger"
+                      >
+                        Cancel Ride
+                      </Button>
+                    </Table.TextCell> */}
                   </Table.Row>
                 ))}
               </Table.Body>

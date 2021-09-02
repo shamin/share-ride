@@ -1,3 +1,5 @@
+import { Address, Driver } from "../../web3/provider/state";
+
 function toRad(value: number) {
   return (value * Math.PI) / 180;
 }
@@ -11,12 +13,7 @@ function sameDay(d1: Date, d2: Date) {
   );
 }
 
-type Coords = {
-  latitude: number;
-  longitude: number;
-};
-
-function calcDistance(coords1: Coords, coords2: Coords) {
+function calcDistance(coords1: Address, coords2: Address) {
   // var R = 6.371; // km
   var R = 6371000;
   var dLat = toRad(coords2.latitude - coords1.latitude);
@@ -32,15 +29,21 @@ function calcDistance(coords1: Coords, coords2: Coords) {
   return Math.abs(d);
 }
 
-export const findDrivers = (current: any, drivers: any) => {
+type Current = {
+  fromAddress: Address;
+  toAddress: Address;
+  startDate: Date;
+}
+
+export const findDrivers = (current: Current, drivers: Driver[]): Driver[] => {
   return drivers
     .filter(
-      (c: any) =>
+      (c) =>
         calcDistance(c.fromAddress, current.fromAddress) < 100 &&
         calcDistance(c.toAddress, current.toAddress) < 100 &&
         sameDay(new Date(c.startDate), current.startDate)
     )
-    .map((driver: any) => ({
+    .map((driver) => ({
       ...driver,
     }));
 };

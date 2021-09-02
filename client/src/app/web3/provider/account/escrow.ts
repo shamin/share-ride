@@ -15,6 +15,8 @@ export const intializeEscrow = async (
   console.log("Program loaded", program, passengerAmount, driverPublicKey);
   const escrowAccount = Keypair.generate();
 
+  console.log(tokenAccount);
+
   await program.rpc.initializeEscrow(new BN(passengerAmount), {
     accounts: {
       passenger: provider.wallet.publicKey,

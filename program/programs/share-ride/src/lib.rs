@@ -61,6 +61,34 @@ pub mod share_ride {
             }
             Ok(())
         }
+
+        pub fn remove_ride(&mut self, _ctx: Context<Auth>, archive: Archive) -> Result<()> {
+            let dummy = Archive { 
+                archive: String::from("___________________________________________"), 
+            };
+            msg!("Dummy {:?}", dummy);
+            for i in 0..10 {
+                let num_usize: usize = i as usize;
+                if self.rides[num_usize].archive == archive.archive {
+                    self.rides[num_usize] = dummy.clone();
+                }
+            }
+            Ok(())
+        }
+
+        pub fn remove_driver(&mut self, _ctx: Context<Auth>, archive: Archive) -> Result<()> {
+            let dummy = Archive { 
+                archive: String::from("___________________________________________"), 
+            };
+            msg!("Dummy {:?}", dummy);
+            for i in 0..10 {
+                let num_usize: usize = i as usize;
+                if self.drivers[num_usize].archive == archive.archive {
+                    self.drivers[num_usize] = dummy.clone();
+                }
+            }
+            Ok(())
+        }
     }
 }
 

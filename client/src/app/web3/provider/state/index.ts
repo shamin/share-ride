@@ -4,9 +4,34 @@ import { Provider } from "@project-serum/anchor";
 import { AccountInfo } from "@solana/spl-token";
 import { intializeEscrow } from "../account/escrow";
 
-interface Driver {}
+export type Address = {
+  address: string;
+  latitude: number;
+  longitude: number;
+};
 
-interface Ride {}
+export interface Driver {
+  archiveId: string;
+  fromAddress: Address;
+  toAddress: Address;
+  startDate: string;
+  driver: string;
+  riderKey: string;
+  costPerKm: number;
+  selectedSeats: number;
+  walletKey: string;
+}
+
+export interface Ride {
+  archiveId: string;
+  fromAddress: Address;
+  toAddress: Address;
+  startDate: string;
+  driver: string;
+  riderKey: string;
+  driveId: string;
+  escrow: string;
+}
 
 export interface ShareRideState {
   drivers: Driver[];
@@ -17,7 +42,7 @@ export interface ShareRideState {
   setShowCompleteModal: React.Dispatch<React.SetStateAction<boolean>>;
   addDriver: (driver: any) => Promise<void>;
   addRide: (ride: any) => Promise<void>;
-  loading: boolean;
+  removeDriver: (archive: string) => Promise<void>;
 }
 
 export const useShareRideState = (
@@ -28,9 +53,6 @@ export const useShareRideState = (
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [rides, setRides] = useState<Ride[]>([]);
 
-  const [loading, setLoading] = useState(false);
-  const [driversLoading, setDriversLoading] = useState(false);
-  const [ridesLoading, setRidesLoading] = useState(false);
   const [showCompleteModal, setShowCompleteModal] = useState(false);
 
   const shareRideModelRef = useRef<ShareRideModel>();
@@ -39,7 +61,7 @@ export const useShareRideState = (
     setLoadingText("Loading...")
     const _shareRideModel = new ShareRideModel(provider);
     const data = await _shareRideModel.initialize();
-    setDrivers(data.drivers);
+    setDrivers(data.drivers as Driver[]);
     setRides(data.rides);
     setLoadingText("")
     shareRideModelRef.current = _shareRideModel;
@@ -57,12 +79,9 @@ export const useShareRideState = (
     if (!shareRideModelRef.current) {
       return;
     }
-    if (driversLoading) {
-      return;
-    }
     setLoadingText("Loading rides")
     try {
-      const drivers = await shareRideModelRef.current.getActiveDrivers();
+      const drivers = await shareRideModelRef.current.getActiveDrivers() as Driver[];
       setDrivers(drivers);
     } catch (err) {
       console.log("Error loading drivers", err);
@@ -72,9 +91,6 @@ export const useShareRideState = (
 
   const loadRides = async () => {
     if (!shareRideModelRef.current) {
-      return;
-    }
-    if (ridesLoading) {
       return;
     }
     setLoadingText("Loading rides")
@@ -126,6 +142,16 @@ export const useShareRideState = (
     setLoadingText("")
   };
 
+  const removeDriver = async (archiveId: string) => {
+    if (!shareRideModelRef.current) {
+      return;
+    }
+    setLoadingText("Marking ride as complete")
+    await shareRideModelRef.current.removeDriver(archiveId);
+    await loadRides();
+    setLoadingText("")
+  };
+
   return {
     drivers,
     rides,
@@ -135,6 +161,6 @@ export const useShareRideState = (
     setShowCompleteModal,
     addDriver,
     addRide,
-    loading,
+    removeDriver,
   };
 };
