@@ -1,6 +1,6 @@
 ## Share Ride
 
-A decentralized, fully transparent and customer centered ride-sharing dapp
+A decentralized and fully transparent ride-sharing dapp.
 
 The app is deployed at [https://share-ride.surge.sh/](https://share-ride.surge.sh/)
 
@@ -40,8 +40,8 @@ This app requires the following dependancies. Before continuing, download and in
 ## Running the program locally
 
 ```
-  cd program
-  npm run deploy // This will deploy the program to the local solana network and copy idls generated to the client app.
+cd program
+npm run deploy // This will deploy the program to the local solana network and copy idls generated to the client app.
 ```
 
 ## Running the app locally
