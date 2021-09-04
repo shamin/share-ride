@@ -31,6 +31,7 @@ export interface Ride {
   riderKey: string;
   driveId: string;
   escrow: string;
+  selectedSeats: number;
 }
 
 export interface ShareRideState {
@@ -48,7 +49,7 @@ export interface ShareRideState {
 export const useShareRideState = (
   provider: Provider | undefined,
   tokenAccount: AccountInfo | undefined,
-  setLoadingText: React.Dispatch<React.SetStateAction<string>>
+  setLoadingText: (loadingText: string) => void
 ): ShareRideState => {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [rides, setRides] = useState<Ride[]>([]);

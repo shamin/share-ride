@@ -20,7 +20,7 @@ export const Login = () => {
     <div className="container">
       <div className="login">
         <img alt="share ride logo" src={Logo} />
-        <h3>Welcome back to share ride</h3>
+        <h3>Welcome back to Share Ride</h3>
         <p>Ready to go somewhere? Connect your wallet to get started.</p>
         <Button isLoading={loading} onClick={login}>Connect with wallet</Button>
       </div>

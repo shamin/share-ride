@@ -18,6 +18,8 @@ const LoadingModal: React.FC<LoadingModalProps> = ({
       confirmLabel="Custom Label"
       hasClose={false}
       hasFooter={false}
+      shouldCloseOnOverlayClick={false}
+      shouldCloseOnEscapePress={false}
     >
       <div className="loading-modal">
         <Spinner />

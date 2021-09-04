@@ -104,6 +104,24 @@
             }
           }
         ]
+      },
+      {
+        "name": "removeDriver",
+        "accounts": [
+          {
+            "name": "authority",
+            "isMut": false,
+            "isSigner": true
+          }
+        ],
+        "args": [
+          {
+            "name": "archive",
+            "type": {
+              "defined": "Archive"
+            }
+          }
+        ]
       }
     ]
   },
@@ -129,6 +147,6 @@
     }
   ],
   "metadata": {
-    "address": "HtdnYeMXt5yCQi8KsKQnjH5ZyqYN9ePiGZCxvWyMwpNZ"
+    "address": "3LL5Wa7JN4cNyPoXdCnxUnJUoLLFWANaRRjirRTtARtS"
   }
 }

@@ -7,7 +7,9 @@ export default defineConfig({
   server: {
     port: 5000
   },
-  plugins: [reactRefresh(), polyfillNode()],
+  plugins: [reactRefresh(),
+    //  polyfillNode()
+    ],
   optimizeDeps: {
     exclude: ["web3"], // <= The libraries that need shimming should be excluded from dependency optimization.
   },

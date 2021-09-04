@@ -37,7 +37,6 @@ export const Offer = () => {
   const {
     addDriver,
     loadDrivers,
-    loading,
     showCompleteModal,
     setShowCompleteModal,
   } = shareRideState;
@@ -176,7 +175,6 @@ export const Offer = () => {
         </div>
         {
           <Button
-            isLoading={loading}
             disabled={
               !fromAddress || !toAddress || !selectedSeats || !costPerKm
             }
