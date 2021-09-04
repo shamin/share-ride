@@ -82,6 +82,6 @@ view share ride at [http://localhost:5000/](http://localhost:5000/)
 ### Future scope
 
 - This project is currently an `MVP`. It supports all the functionalities required for a carpooling app but there are some loose ends too.
-- We can only store limited amount of data in user accounts. So instead of using user accounts to store we need to to have a better data store that can store any amount of data and is scalable.
+- We can only store limited amount of data in user accounts. Even though we are only using user accounts to store arweave archive id still it have some limitations. So instead of using user accounts to store we need to to have a better data store that can store any amount of data and is scalable.
 - There are some bugs and the user might end up in some bad state if some steps in the flow is failed. We need to add retry logic if something is failed.
 - Now sherekhan (Share ride coins) can only be used to choose a ride. We need to introduce more methods by which a user can spend their tokens.
