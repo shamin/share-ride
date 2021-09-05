@@ -37,6 +37,9 @@ This app requires the following dependancies. Before continuing, download and in
 - [Solana Tool Suite](https://docs.solana.com/cli/install-solana-cli-tools)
 - [Testweave](https://github.com/ArweaveTeam/testweave-docker)
 
+## Running Locally
+This project by default connects to the solana dev network. You need to update that in [client](https://github.com/shamin/share-ride/blob/main/client/src/app/web3/provider/index.tsx#L66) and [anchor config file](https://github.com/shamin/share-ride/blob/main/program/Anchor.toml#L2).
+
 ## Running the program locally
 
 ```
@@ -64,6 +67,8 @@ npm install
 ```
 
 ### Create a mint authority
+
+For the ease of minting tokens from the client for development mint autority is pushed along with the project. You can see it [here](https://github.com/shamin/share-ride/blob/main/client/src/app/web3/provider/account/mint-account.json).
 
 ```
 npm run create-mint
