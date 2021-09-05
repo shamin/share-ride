@@ -121,18 +121,6 @@ const ShareRideProviderProvider: React.FC<ShareRideProviderProviderProps> = ({
     await shareRideState.removeDriver(driverId);
     setLoadingText("Reloading rides");
     await shareRideState.loadDrivers();
-
-    //TODO: Fix this hardcoded ride
-    // console.log(shareRideState.rides);
-    // const ride: any = shareRideState.rides.find(({archiveId}) => archiveId === rideId);
-    // if (provider && tokenAccount) {
-    //   setLoadingText("Transfering sherekhans to your account")
-    //   await exchangeEscrow(provider, tokenAccount, ride.escrow);
-    //   setLoadingText("Reloading token account")
-    //   await loadTokenAccount();
-    //   await shareRideState.removeRide(rideId);
-    //   setLoadingText("")
-    // }
   };
 
   const value = useMemo<ShareRideProviderContextType>(
